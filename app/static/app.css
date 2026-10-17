@@ -1,26 +1,16 @@
 :root {
-  --bg: #f7f6f2;
+  /* Light only, on purpose: this is for coaches and players, not engineers. */
+  color-scheme: light;
+  --bg: #f6f7f9;
   --surface: #ffffff;
-  --text: #1c1f1d;
-  --muted: #5f6661;
-  --line: #dedbd2;
-  --accent: #1f6f43;
+  --text: #1a1d21;
+  --muted: #5d6470;
+  --line: #dde1e6;
+  --accent: #1d4ed8;
   --accent-text: #ffffff;
-  --warn: #a15c00;
+  --warn: #b45309;
   --radius: 12px;
   --tap: 44px;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #121513;
-    --surface: #1b1f1c;
-    --text: #e8ebe8;
-    --muted: #9aa39d;
-    --line: #2d332f;
-    --accent: #4fb07a;
-    --accent-text: #0d130f;
-    --warn: #e0a24a;
-  }
 }
 
 * { box-sizing: border-box; }
