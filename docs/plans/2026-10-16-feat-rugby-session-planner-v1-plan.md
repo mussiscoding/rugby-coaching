@@ -353,7 +353,7 @@ GET  /healthz
   - `tests/test_access.py`:
     - the **route-walk** default-deny test (players and anonymous users get 403 or 404 everywhere outside the allowlist; a cross-origin POST gets 403)
     - join sets the role, rotating a key invalidates the old cookie, and the player link doesn't downgrade a coach
-- [ ] **Deploy the skeleton** to `/srv/rugby-coaching` at `rugby-coaching.johng.me`.
+- [x] **Deploy the skeleton** to `/srv/rugby-coaching` at `rugby-coaching.johng.me`.
 
 **Done when:**
 - coach and player links work on John's phone through Cloudflare;
