@@ -1,8 +1,29 @@
 {% extends "base.html" %}
 {% block main %}
-  <h1>Sessions</h1>
-  <div class="empty">
-    <p>No sessions yet.</p>
-    <p class="muted">Planning sessions arrives in the next step of the build.</p>
+  <div class="row-between">
+    <h1>Sessions</h1>
+    <a class="button primary" href="/sessions/new">+ New session</a>
   </div>
+
+  {% macro session_row(s) %}
+    <li>
+      <a class="card-link" href="/sessions/{{ s.id }}">
+        <span class="card-title">{{ s.date|nice_date }}</span>
+        <span class="muted small">{{ s.start_time }} · {{ s.block_count }} block{{ "s" if s.block_count != 1 }}</span>
+        <span class="card-summary">{{ s.goal or "No goal yet" }}</span>
+      </a>
+    </li>
+  {% endmacro %}
+
+  <h2>Coming up</h2>
+  {% if upcoming %}
+    <ul class="cards">{% for s in upcoming %}{{ session_row(s) }}{% endfor %}</ul>
+  {% else %}
+    <div class="empty"><p>Nothing planned yet.</p><p><a href="/sessions/new">Plan the next session</a></p></div>
+  {% endif %}
+
+  {% if past %}
+    <h2>Past sessions</h2>
+    <ul class="cards">{% for s in past %}{{ session_row(s) }}{% endfor %}</ul>
+  {% endif %}
 {% endblock %}

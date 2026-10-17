@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block main %}
+  <p class="back"><a href="/sessions/{{ session.id }}/add{{ '?block_id=%d' % block.id if block }}">← Back to the list</a></p>
+  <h1>{{ activity.name }}</h1>
+  <p class="meta">
+    <span class="badge badge-{{ activity.type }}">{{ type_label }}</span>
+    {% if activity.players %}<span>{{ activity.players }} players</span>{% endif %}
+    {% if activity.coaches_needed %}<span>{{ activity.coaches_needed }} coach{{ "es" if activity.coaches_needed != 1 }}</span>{% endif %}
+    {% if activity.space %}<span>{{ activity.space }}</span>{% endif %}
+  </p>
+
+  <form method="post" action="{{ '/blocks/%d/groups' % block.id if block else '/sessions/%d/blocks' % session.id }}" class="add-form">
+    <input type="hidden" name="activity_id" value="{{ activity.id }}">
+    {% if not block %}
+      <label>Minutes <input type="number" name="duration" value="{{ duration }}" min="1" max="180" inputmode="numeric" required></label>
+    {% endif %}
+    <button class="primary">{{ "Add to this block" if block else "Add to plan" }}</button>
+  </form>
+
+  {% if activity.summary %}<p class="summary">{{ activity.summary }}</p>{% endif %}
+  {% for b in description %}
+    {% if b.kind == "h" %}<h2>{{ b.text }}</h2>
+    {% elif b.kind == "ul" %}<ul>{% for item in b["items"] %}<li>{{ item }}</li>{% endfor %}</ul>
+    {% else %}<p>{% for line in b.lines %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>{% endif %}
+  {% endfor %}
+  {% if points.coaching %}<h2>Coaching points</h2><ul class="points">{% for p in points.coaching %}<li>{{ p.text }}</li>{% endfor %}</ul>{% endif %}
+  {% if points.looks_like %}<h2>What good looks like</h2><ul class="points">{% for p in points.looks_like %}<li>{{ p.text }}</li>{% endfor %}</ul>{% endif %}
+{% endblock %}

@@ -145,3 +145,44 @@ code { background: #eef1f5; padding: 0 4px; border-radius: 4px; }
 
 .tag-filter { margin: 4px 0 12px; }
 .tag-filter summary { cursor: pointer; color: var(--accent); min-height: var(--tap); display: flex; align-items: center; }
+
+/* --- session plan --- */
+.small { font-size: 14px; }
+.goal { background: #eef3ff; border: 1px solid #c9d7fb; border-radius: var(--radius); padding: 12px 14px; margin: 8px 0 16px; }
+.goal-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #1e3a8a; }
+.goal p { margin: 4px 0 0; font-size: 17px; font-weight: 600; }
+.block { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px 12px; margin: 10px 0; scroll-margin-top: 70px; }
+.block-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 6px; }
+.block-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.block-tools { display: flex; align-items: center; gap: 4px; }
+.duration { display: inline-flex; align-items: center; gap: 4px; margin-right: 4px; }
+.duration input { width: 64px; min-height: 36px; padding: 4px 8px; text-align: center; }
+.groups { display: grid; gap: 8px; }
+.is-split .groups { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.group { padding: 8px 0 0; }
+.is-split .group { padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.group-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+.group-name { font-weight: 600; font-size: 17px; color: var(--text); }
+a.group-name { text-decoration: none; }
+.group-coaches { color: var(--muted); font-size: 15px; }
+.why { margin: 6px 0 0; }
+.focus { list-style: none; padding: 0; margin: 6px 0 0; font-size: 15px; }
+.how { margin: 6px 0 0; font-size: 15px; color: var(--muted); }
+.group-edit { display: inline-block; margin-top: 6px; font-size: 14px; }
+.add-group { display: inline-block; margin-top: 8px; font-size: 14px; }
+.clash { margin: 0 0 6px; color: var(--warn); font-weight: 600; font-size: 15px; }
+.add-block {
+  display: flex; justify-content: center; align-items: center; min-height: 56px; margin: 12px 0;
+  border: 2px dashed #b9c9f5; border-radius: var(--radius); font-weight: 600; text-decoration: none; background: var(--surface);
+}
+.add-form { display: flex; gap: 8px; align-items: flex-end; margin: 12px 0; flex-wrap: wrap; }
+.add-form label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+.add-form input { width: 100px; }
+.inline-form { flex-direction: row; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
+.inline-form label:first-child { flex: 1; min-width: 180px; }
+.inline-form input[type=number] { width: 90px; }
+.checks { border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px; margin: 0; background: var(--surface); }
+.checks legend { font-weight: 600; padding: 0 4px; }
+.checks label { flex-direction: row; align-items: center; gap: 10px; font-weight: 400; min-height: var(--tap); }
+.checks input[type=checkbox] { width: 22px; height: 22px; flex: none; }
+.empty.small, li.empty { list-style: none; }

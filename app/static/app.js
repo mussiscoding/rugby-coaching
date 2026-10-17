@@ -88,9 +88,25 @@
     sync();
   }
 
+  // --- Save a block's minutes as soon as it changes ----------------------------
+  document.addEventListener("change", function (e) {
+    if (e.target.matches("[data-autosubmit]")) e.target.form.requestSubmit();
+  });
+
+  // --- After saving, scroll back to the block you were working on --------------
+  function scrollToMarked() {
+    var marker = document.querySelector("[data-scroll-to]");
+    if (!marker) return;
+    var el = document.getElementById(marker.getAttribute("data-scroll-to"));
+    marker.removeAttribute("data-scroll-to");
+    if (el) el.scrollIntoView({ block: "start" });
+  }
+  document.addEventListener("htmx:afterSettle", function () { setTimeout(scrollToMarked, 0); });
+
   function init(root) {
     (root || document).querySelectorAll("[data-tag-input]").forEach(initTagInput);
   }
+  document.addEventListener("DOMContentLoaded", scrollToMarked);
   document.addEventListener("DOMContentLoaded", function () { init(document); });
   document.addEventListener("htmx:load", function (e) { init(e.detail.elt); });
 })();

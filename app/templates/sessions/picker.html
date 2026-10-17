@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block main %}
+  {% set base = "/sessions/%d/add" % session.id %}
+  {% set keep = ("block_id=%d&" % block.id) if block else "" %}
+  <p class="back"><a href="/sessions/{{ session.id }}">← Back to the plan</a></p>
+  <h1>{{ "Add a group to this block" if block else "Add a block" }}</h1>
+  {% if block %}<p class="hint">Runs at the same time as the other group(s) in the block.</p>{% endif %}
+
+  <form method="get" action="{{ base }}" class="search">
+    {% if block %}<input type="hidden" name="block_id" value="{{ block.id }}">{% endif %}
+    {% if type %}<input type="hidden" name="type" value="{{ type }}">{% endif %}
+    <input type="search" name="q" value="{{ q }}" placeholder="Search activities" aria-label="Search activities"
+           hx-get="{{ base }}" hx-trigger="input changed delay:250ms, search" hx-target="#results" hx-select="#results"
+           hx-swap="outerHTML" hx-include="closest form" hx-push-url="false">
+  </form>
+  <div class="chips">
+    <a class="chip{% if not type %} is-on{% endif %}" href="{{ base }}?{{ keep }}q={{ q|urlencode }}">All</a>
+    {% for key, label in types.items() %}
+      <a class="chip{% if type == key %} is-on{% endif %}" href="{{ base }}?{{ keep }}q={{ q|urlencode }}&type={{ key }}">{{ label }}</a>
+    {% endfor %}
+  </div>
+
+  <div id="results">
+    {% if suggested %}
+      <h2>Goes well after the last block</h2>
+      <ul class="cards">
+        {% for a in suggested %}
+          <li><a class="card-link" href="{{ base }}/{{ a.id }}{{ '?block_id=%d' % block.id if block }}">
+            <span class="card-title">{{ a.name }}</span><span class="badge badge-{{ a.type }}">{{ types[a.type] }}</span></a></li>
+        {% endfor %}
+      </ul>
+      <h2>All activities</h2>
+    {% endif %}
+    <ul class="cards">
+      {% for a in results %}
+        <li><a class="card-link" href="{{ base }}/{{ a.id }}{{ '?block_id=%d' % block.id if block }}">
+          <span class="card-title">{{ a.name }}</span>
+          <span class="badge badge-{{ a.type }}">{{ types[a.type] }}</span>
+          {% if a.summary %}<span class="card-summary">{{ a.summary }}</span>{% endif %}
+        </a></li>
+      {% else %}
+        <li class="empty">No activities match.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <h2>Something else</h2>
+  <form method="post" action="{{ '/blocks/%d/groups' % block.id if block else '/sessions/%d/blocks' % session.id }}" class="form inline-form">
+    <label>What is it? <input type="text" name="title" placeholder="e.g. Water break, Team talk" required></label>
+    {% if not block %}<label>Minutes <input type="number" name="duration" value="5" min="1" max="180" inputmode="numeric" required></label>{% endif %}
+    <button>Add</button>
+  </form>
+  <p><a href="/activities/new?session_id={{ session.id }}">+ Create a new activity</a></p>
+{% endblock %}

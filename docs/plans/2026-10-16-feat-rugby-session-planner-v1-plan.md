@@ -384,7 +384,7 @@ GET  /healthz
 
 ### Phase 3a: Sessions with single-group blocks
 
-- [ ] `app/sessions.py`:
+- [x] `app/sessions.py`:
   - create/update session (D17)
   - add a block with its first group (in one `tx`)
   - edit duration
@@ -392,19 +392,19 @@ GET  /healthz
   - archive/restore (restore appends to the end)
   - `load_session(id)` returns the tree through the live views
   - every block or group mutation bumps the session's `updated_at` and `updated_by`, shown as "Last edited by Sam, 19:02" (D17)
-- [ ] `app/timing.py`: `layout(blocks, start_time)` returns per-block relative and clock ranges plus the total and end time; `today_london()`
-- [ ] `app/routes/sessions.py` + templates:
+- [x] `app/timing.py`: `layout(blocks, start_time)` returns per-block relative and clock ranges plus the total and end time; `today_london()`
+- [x] `app/routes/sessions.py` + templates:
   - `sessions/show.html`
   - `_block.html` and `_group.html` includes
   - `_picker.html` (search, chips, related-to-previous, free-text item, create new activity)
   - `sessions/form.html`
-- [ ] **Tests:** `tests/test_timing.py` covers reflow, total and end time, including splits.
+- [x] **Tests:** `tests/test_timing.py` covers reflow, total and end time, including splits.
 
 ### Phase 3b: Splits, coaches, focus points
 
-- [ ] Add group / archive group; the group edit form with coaches (D1), why today, focus points (D7: tick the activity's coaching points, or add a session-only one) and how it went (date-gated)
-- [ ] `timing.conflicts(block)` plus the badge (D10)
-- [ ] Narrow-screen stacking; try a 5-group split on a phone
+- [x] Add group / archive group; the group edit form with coaches (D1), why today, focus points (D7: tick the activity's coaching points, or add a session-only one) and how it went (date-gated)
+- [x] `timing.conflicts(block)` plus the badge (D10)
+- [x] Narrow-screen stacking; try a 5-group split on a phone
 
 ### Phase 4: History, reuse and recovery
 

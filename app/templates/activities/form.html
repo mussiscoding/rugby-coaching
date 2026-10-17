@@ -11,6 +11,7 @@
   {% endif %}
 
   <form method="post" action="{{ '/activities/%d' % activity.id if activity else '/activities' }}" class="form">
+    {% if session_id %}<input type="hidden" name="session_id" value="{{ session_id }}">{% endif %}
     <label>Name
       <input type="text" name="name" value="{{ values.name }}" required>
     </label>
@@ -61,6 +62,6 @@
   {% if activity %}
     <form method="post" action="/activities/{{ activity.id }}/cancel"><button>Cancel</button></form>
   {% else %}
-    <p><a href="/activities">Cancel</a></p>
+    <p><a href="{{ '/sessions/%d/add' % session_id if session_id else '/activities' }}">Cancel</a></p>
   {% endif %}
 {% endblock %}

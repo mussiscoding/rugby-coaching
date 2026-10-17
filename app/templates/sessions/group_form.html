@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block main %}
+  <p class="back"><a href="/sessions/{{ group.session_id }}">← Back to the plan</a></p>
+  <h1>{{ group.activity_name or group.title }}</h1>
+  {% if group.activity_archived_at %}<p class="hint">This activity has been deleted from the library; it still shows here.</p>{% endif %}
+
+  <form method="post" action="/groups/{{ group.id }}" class="form">
+    {% if not group.activity_id %}
+      <label>What is it? <input type="text" name="title" value="{{ group.title }}"></label>
+    {% endif %}
+
+    <label>Group name {% if not is_split %}<span class="muted">— only shown once this block is split</span>{% endif %}
+      <input type="text" name="label" value="{{ group.label }}" list="labels" placeholder="e.g. Forwards, Backs, Station 2">
+      <datalist id="labels">{% for l in labels %}<option value="{{ l }}">{% endfor %}</datalist>
+    </label>
+
+    <fieldset class="checks">
+      <legend>Who's running it</legend>
+      {% for c in coaches %}
+        <label><input type="checkbox" name="coach_id" value="{{ c.id }}" {% if c.id in chosen %}checked{% endif %}> {{ c.name }}</label>
+      {% endfor %}
+    </fieldset>
+
+    <label>Why today <span class="muted">— how this serves the session goal</span>
+      <textarea name="why_today" rows="2">{{ group.why_today }}</textarea>
+    </label>
+
+    {% if points %}
+      <fieldset class="checks">
+        <legend>Coaching points to draw out today</legend>
+        {% for p in points %}
+          <label><input type="checkbox" name="point_id" value="{{ p.id }}" {% if p.id in starred %}checked{% endif %}> {{ p.text }}</label>
+        {% endfor %}
+      </fieldset>
+    {% endif %}
+    <label>{{ "Any others for today" if points else "Coaching points for today" }} <span class="muted">— one per line</span>
+      <textarea name="custom_points" rows="2">{{ custom }}</textarea>
+    </label>
+
+    {% if is_past %}
+      <label>How it went <span class="muted">— shows on the activity's card for next time</span>
+        <textarea name="how_it_went" rows="3">{{ group.how_it_went }}</textarea>
+      </label>
+    {% else %}
+      <input type="hidden" name="how_it_went" value="{{ group.how_it_went }}">
+    {% endif %}
+
+    <div class="actions"><button class="primary">Save</button></div>
+  </form>
+  <form method="post" action="/groups/{{ group.id }}/archive">
+    <button class="danger">{{ "Remove this group" if is_split else "Remove this block" }}</button>
+  </form>
+{% endblock %}

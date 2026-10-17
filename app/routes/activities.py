@@ -43,14 +43,14 @@ def index(request: Request, q: str = "", type: str = "", tag: str = ""):
 
 
 @coach.get("/activities/new")
-def new_form(request: Request, coach: Coach = Depends(current_coach)):
+def new_form(request: Request, session_id: int | None = None, coach: Coach = Depends(current_coach)):
     with db() as conn:
         tags = acts.all_tags(conn)
     values = {f: "" for f in acts.FIELDS} | {"type": "skill", "description": DESCRIPTION_TEMPLATE}
     return render(
         request, "activities/form.html",
         activity=None, values=values, point_rows={k: [] for k in acts.POINT_KINDS},
-        errors=[], all_tags=tags, types=acts.TYPES, used_in=0,
+        errors=[], all_tags=tags, types=acts.TYPES, used_in=0, session_id=session_id,
     )
 
 
@@ -120,6 +120,7 @@ def _form_again(request, conn, activity, values, point_rows, errors):
         activity=activity, values=values, point_rows=shown, errors=errors,
         all_tags=acts.all_tags(conn), types=acts.TYPES,
         used_in=acts.sessions_using(conn, activity["id"]) if activity else 0,
+        session_id=values.get("session_id"),
     )
 
 
@@ -128,8 +129,13 @@ def create(request: Request, form: FormData = Depends(form_data), coach: Coach =
     values, point_rows, errors = _parse(form)
     with db() as conn:
         if errors:
+            sid = str(form.get("session_id") or "")
+            values["session_id"] = int(sid) if sid.isdigit() else None
             return _form_again(request, conn, None, values, point_rows, errors)
         activity_id = acts.create(conn, values, point_rows, coach.id)
+    session_id = str(form.get("session_id") or "")
+    if session_id.isdigit():  # made from the + picker: go back to it (server-built URL, D-security)
+        return RedirectResponse(f"/sessions/{int(session_id)}/add", status_code=303)
     return _see(activity_id)
 
 

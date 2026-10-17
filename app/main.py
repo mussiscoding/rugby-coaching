@@ -12,7 +12,7 @@ from app.auth import NeedsCoachName, NotForPlayers, NotJoined, RedactJoinKeys, w
 from app.config import check_prod_settings, settings
 from app.db import init_db, sync_coaches
 from app.seed_activities import seed_if_empty
-from app.routes import access, activities, home
+from app.routes import access, activities, home, sessions
 from app.templating import STATIC_DIR, render
 
 logging.getLogger("uvicorn.access").addFilter(RedactJoinKeys())
@@ -79,3 +79,4 @@ app.include_router(access.public)
 app.include_router(access.coach)
 app.include_router(home.viewer)
 app.include_router(activities.coach)
+app.include_router(sessions.coach)
