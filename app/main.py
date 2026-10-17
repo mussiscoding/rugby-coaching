@@ -11,7 +11,8 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.auth import NeedsCoachName, NotForPlayers, NotJoined, RedactJoinKeys, who_url
 from app.config import check_prod_settings, settings
 from app.db import init_db, sync_coaches
-from app.routes import access, home
+from app.seed_activities import seed_if_empty
+from app.routes import access, activities, home
 from app.templating import STATIC_DIR, render
 
 logging.getLogger("uvicorn.access").addFilter(RedactJoinKeys())
@@ -24,6 +25,7 @@ async def lifespan(app: FastAPI):
     check_prod_settings(settings)
     init_db()
     sync_coaches(settings.coach_names)
+    seed_if_empty()
     yield
 
 
@@ -76,3 +78,4 @@ def http_error(request: Request, exc: StarletteHTTPException):
 app.include_router(access.public)
 app.include_router(access.coach)
 app.include_router(home.viewer)
+app.include_router(activities.coach)

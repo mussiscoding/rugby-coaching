@@ -363,20 +363,20 @@ GET  /healthz
 
 ### Phase 2: Activity library
 
-- [ ] `app/activities.py`:
+- [x] `app/activities.py`:
   - CRUD, archive/restore; the activity edit lock (take, clear, check on save; D17)
   - `search(q, type, tag)`
   - `all_tags()`
   - links add/remove (a < b, no links to itself, archived activities hidden)
   - `usage(activity_id)` (D11)
-- [ ] Notion-style tag picker (D22) in `app.js`, plus tag chips for filtering in the library and the picker
-- [ ] Activity edit form: coaching points and "what good looks like" as editable rows (D7); save updates, inserts and archives rows in one `tx`
-- [ ] `app/text.py`: `render_description()` (D8), `valid_video_url()`
-- [ ] `app/routes/activities.py` + templates:
+- [x] Notion-style tag picker (D22) in `app.js`, plus tag chips for filtering in the library and the picker
+- [x] Activity edit form: coaching points and "what good looks like" as editable rows (D7); save updates, inserts and archives rows in one `tx`
+- [x] `app/text.py`: `render_description()` (D8), `valid_video_url()`
+- [x] `app/routes/activities.py` + templates:
   - `activities/index.html`
   - `activities/show.html`: summary, description (set up / how to run / progressions), video, players/coaches/space/duration, coaching points, what good looks like, related, usage and notes
   - `activities/form.html`
-- [ ] `app/seed_activities.py`: about 18 activities (≈4 warm-up, ≈8 skill zone, ≈6 game zone).
+- [x] `app/seed_activities.py`: about 18 activities (≈4 warm-up, ≈8 skill zone, ≈6 game zone).
   - **Pairing:** skill zones paired with game zones through related links.
   - **Wording:** our own, not copied from RFU text.
   - **Seeding:** inserted only into an empty table (D20).

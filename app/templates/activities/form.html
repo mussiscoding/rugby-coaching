@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit " ~ activity.name if activity else "New activity" }} · {{ app_name }}{% endblock %}
+{% block main %}
+  <h1>{{ "Edit activity" if activity else "New activity" }}</h1>
+
+  {% if errors %}
+    <div class="banner warn">{% for e in errors %}<p>{{ e }}</p>{% endfor %}</div>
+  {% endif %}
+  {% if activity and used_in %}
+    <p class="hint">Used in {{ used_in }} session{{ "s" if used_in != 1 }} — changes show up in all of them.</p>
+  {% endif %}
+
+  <form method="post" action="{{ '/activities/%d' % activity.id if activity else '/activities' }}" class="form">
+    <label>Name
+      <input type="text" name="name" value="{{ values.name }}" required>
+    </label>
+
+    <div class="field">
+      <span class="label">Type</span>
+      <div class="segmented">
+        {% for key, label in types.items() %}
+          <label><input type="radio" name="type" value="{{ key }}" {% if values.type == key %}checked{% endif %}> {{ label }}</label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <label>Summary <span class="muted">— one line, shown in lists</span>
+      <input type="text" name="summary" value="{{ values.summary }}" maxlength="140">
+    </label>
+
+    <label>Description
+      <span class="hint">Lines starting <code>## </code> are headings, <code>- </code> are bullets. Delete any heading you don't need.</span>
+      <textarea name="description" rows="14">{{ values.description }}</textarea>
+    </label>
+
+    {% with kind="coaching", rows=point_rows.coaching, label="Coaching points", placeholder="What you'll say, e.g. Low hips, chin up" %}
+      {% include "activities/_point_rows.html" %}
+    {% endwith %}
+    {% with kind="looks_like", rows=point_rows.looks_like, label="What good looks like", placeholder="What you'll watch for, e.g. Ball available in under 3s" %}
+      {% include "activities/_point_rows.html" %}
+    {% endwith %}
+
+    <div class="grid-2">
+      <label>Default minutes <input type="number" name="default_duration_min" value="{{ values.default_duration_min or '' }}" min="1" max="180" inputmode="numeric"></label>
+      <label>Coaches needed <input type="number" name="coaches_needed" value="{{ values.coaches_needed if values.coaches_needed is not none else '' }}" min="0" max="20" inputmode="numeric"></label>
+      <label>Players <input type="text" name="players" value="{{ values.players }}" placeholder="e.g. 8–20"></label>
+      <label>Space <input type="text" name="space" value="{{ values.space }}" placeholder="e.g. 22 × 15m"></label>
+    </div>
+
+    <label>Tags
+      <input type="text" name="tags" value="{{ values.tags }}" data-tag-input list="all-tags" placeholder="e.g. breakdown, attack" autocomplete="off">
+      <datalist id="all-tags">{% for t in all_tags %}<option value="{{ t }}">{% endfor %}</datalist>
+    </label>
+
+    <label>Video link <input type="url" name="video_url" value="{{ values.video_url }}" placeholder="https://"></label>
+
+    <div class="actions">
+      <button class="primary">Save</button>
+    </div>
+  </form>
+  {% if activity %}
+    <form method="post" action="/activities/{{ activity.id }}/cancel"><button>Cancel</button></form>
+  {% else %}
+    <p><a href="/activities">Cancel</a></p>
+  {% endif %}
+{% endblock %}

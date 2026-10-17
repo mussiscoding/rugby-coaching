@@ -33,10 +33,14 @@ app/
   config.py       Settings from .env; prod key checks
   db.py           schema + views, db()/tx() helpers, coach sync
   auth.py         secret links → cookie, require_viewer/require_coach/current_coach, csrf_check
-  templating.py   Jinja setup, render(), asset_version()
-  routes/         access.py (join, who, healthz), home.py
+  templating.py   Jinja setup, render(), asset_version(), when/nice_date filters
+  activities.py   activity library queries: search, points, links, usage, 2-hour edit lock
+  seed_activities.py  starter activities, inserted only into an empty library
+  text.py         description → headings/paragraphs/bullets; tag + video URL helpers
+  timing.py       London-time helpers (today, when, nice_date)
+  routes/         access.py (join, who, healthz), home.py, activities.py
   templates/      base.html + pages
-  static/         app.css, htmx.min.js
+  static/         app.css, app.js (tag picker, point rows), htmx.min.js
 tests/            conftest.py, test_access.py
 deploy/           systemd unit, Caddy snippet, backup timer, deploy.sh
 docs/             brainstorms/, plans/, decisions.md, setup.md, jots/

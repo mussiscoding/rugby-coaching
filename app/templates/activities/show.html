@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}{{ activity.name }} · {{ app_name }}{% endblock %}
+{% block main %}
+  <p class="back"><a href="/activities">← Activities</a></p>
+
+  {% if activity.archived_at %}
+    <div class="banner warn">
+      This activity was deleted.
+      <form method="post" action="/activities/{{ activity.id }}/restore" class="inline"><button>Restore it</button></form>
+    </div>
+  {% endif %}
+
+  <h1>{{ activity.name }}</h1>
+  <p class="meta">
+    <span class="badge badge-{{ activity.type }}">{{ type_label }}</span>
+    {% if activity.default_duration_min %}<span>{{ activity.default_duration_min }} min</span>{% endif %}
+    {% if activity.players %}<span>{{ activity.players }} players</span>{% endif %}
+    {% if activity.coaches_needed %}<span>{{ activity.coaches_needed }} coach{{ "es" if activity.coaches_needed != 1 }}</span>{% endif %}
+    {% if activity.space %}<span>{{ activity.space }}</span>{% endif %}
+  </p>
+  {% if usage.runs %}
+    <p class="usage">Run {{ usage.runs }}× · last {{ usage.last|nice_date }}</p>
+  {% endif %}
+
+  {% if not activity.archived_at %}
+    <div class="actions">
+      {% if locked_by %}
+        <p class="lock">🔒 {{ locked_by }} is editing this (since {{ activity.editing_since|when }})</p>
+        <button disabled>Edit</button>
+      {% else %}
+        <form method="post" action="/activities/{{ activity.id }}/lock" class="inline"><button class="primary">Edit</button></form>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if activity.summary %}<p class="summary">{{ activity.summary }}</p>{% endif %}
+  {% if activity.video_url %}<p><a href="{{ activity.video_url }}" target="_blank" rel="noopener noreferrer">▶ Watch the video</a></p>{% endif %}
+
+  {% for block in description %}
+    {% if block.kind == "h" %}<h2>{{ block.text }}</h2>
+    {% elif block.kind == "ul" %}<ul>{% for item in block["items"] %}<li>{{ item }}</li>{% endfor %}</ul>
+    {% else %}<p>{% for line in block.lines %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>
+    {% endif %}
+  {% endfor %}
+
+  {% if points.coaching %}
+    <h2>Coaching points</h2>
+    <ul class="points">{% for p in points.coaching %}<li>{{ p.text }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if points.looks_like %}
+    <h2>What good looks like</h2>
+    <ul class="points">{% for p in points.looks_like %}<li>{{ p.text }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  {% if tags %}
+    <div class="chips chips-small">{% for t in tags %}<a class="chip" href="/activities?tag={{ t|urlencode }}">#{{ t }}</a>{% endfor %}</div>
+  {% endif %}
+
+  <h2>Related activities</h2>
+  {% if related %}
+    <ul class="related">
+      {% for r in related %}
+        <li>
+          <a href="/activities/{{ r.id }}">{{ r.name }}</a>
+          <form method="post" action="/activities/{{ activity.id }}/links/{{ r.id }}/remove" class="inline">
+            <button class="icon" aria-label="Remove link to {{ r.name }}">✕</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">None yet. Link a skill zone to the game zone that tests it.</p>
+  {% endif %}
+  {% if others %}
+    <form method="post" action="/activities/{{ activity.id }}/links" class="link-form">
+      <select name="other_id" aria-label="Activity to link" required>
+        <option value="">Link another activity…</option>
+        {% for o in others %}<option value="{{ o.id }}">{{ o.name }}</option>{% endfor %}
+      </select>
+      <button>Link</button>
+    </form>
+  {% endif %}
+
+  {% if usage.notes %}
+    <h2>From previous sessions</h2>
+    <ul class="notes">
+      {% for n in usage.notes %}
+        <li><a href="/sessions/{{ n.session_id }}">{{ n.date|nice_date }}</a>{% if n.coaches %} — {{ n.coaches }}{% endif %}: {{ n.how_it_went }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <p class="footnote">
+    {% if activity.updated_by_name %}Last edited by {{ activity.updated_by_name }}, {{ activity.updated_at|when }}.{% endif %}
+    {% if used_in %}Used in {{ used_in }} session{{ "s" if used_in != 1 }}.{% endif %}
+  </p>
+
+  {% if not activity.archived_at %}
+    <form method="post" action="/activities/{{ activity.id }}/archive"
+          hx-confirm="Delete this activity?{% if used_in %} It's used in {{ used_in }} session{{ 's' if used_in != 1 }}, which will still show it.{% endif %} You can restore it afterwards.">
+      <button class="danger">Delete activity</button>
+    </form>
+  {% endif %}
+{% endblock %}

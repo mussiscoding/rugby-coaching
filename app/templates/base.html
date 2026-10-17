@@ -7,12 +7,17 @@
   <title>{% block title %}{{ app_name }}{% endblock %}</title>
   <link rel="stylesheet" href="/static/app.css?v={{ asset_version('app.css') }}">
   <script src="/static/htmx.min.js?v={{ asset_version('htmx.min.js') }}" defer></script>
+  <script src="/static/app.js?v={{ asset_version('app.js') }}" defer></script>
 </head>
 <body hx-boost="true">
   <header class="site-header">
     <a class="brand" href="/">{{ app_name }}</a>
     {% if viewer and viewer.is_coach %}
-      <a class="who" href="/who">{{ viewer.coach.name if viewer.coach else "Who are you?" }}</a>
+      <nav class="nav">
+        <a href="/">Sessions</a>
+        <a href="/activities">Activities</a>
+        <a class="who" href="/who">{{ viewer.coach.name if viewer.coach else "Who are you?" }}</a>
+      </nav>
     {% endif %}
   </header>
   <main class="page">

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Activities · {{ app_name }}{% endblock %}
+{% block main %}
+  <div class="row-between">
+    <h1>Activities</h1>
+    <a class="button primary" href="/activities/new">+ New</a>
+  </div>
+
+  <form method="get" action="/activities" class="search">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search activities" aria-label="Search activities">
+    {% if type %}<input type="hidden" name="type" value="{{ type }}">{% endif %}
+    {% if tag %}<input type="hidden" name="tag" value="{{ tag }}">{% endif %}
+  </form>
+
+  <div class="chips">
+    <a class="chip{% if not type %} is-on{% endif %}" href="/activities?q={{ q|urlencode }}&tag={{ tag|urlencode }}">All</a>
+    {% for key, label in types.items() %}
+      <a class="chip{% if type == key %} is-on{% endif %}" href="/activities?q={{ q|urlencode }}&tag={{ tag|urlencode }}&type={{ key }}">{{ label }}</a>
+    {% endfor %}
+  </div>
+  {% if tags %}
+    <details class="tag-filter"{% if tag %} open{% endif %}>
+    <summary>{{ "Tag: #" ~ tag if tag else "Filter by tag" }}</summary>
+    <div class="chips chips-small">
+      {% for t in tags %}
+        <a class="chip{% if tag == t %} is-on{% endif %}" href="/activities?q={{ q|urlencode }}&type={{ type }}{% if tag != t %}&tag={{ t|urlencode }}{% endif %}">#{{ t }}</a>
+      {% endfor %}
+    </div>
+    </details>
+  {% endif %}
+
+  {% if items %}
+    <ul class="cards">
+      {% for a in items %}
+        <li>
+          <a class="card-link" href="/activities/{{ a.id }}">
+            <span class="card-title">{{ a.name }}</span>
+            <span class="badge badge-{{ a.type }}">{{ types[a.type] }}</span>
+            {% if a.summary %}<span class="card-summary">{{ a.summary }}</span>{% endif %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty"><p>No activities match.</p><p><a href="/activities">Clear the filters</a></p></div>
+  {% endif %}
+{% endblock %}

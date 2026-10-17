@@ -1,0 +1,19 @@
+{# One editable list of points. Expects: kind, rows, label, placeholder. #}
+<fieldset class="points-edit" data-points="{{ kind }}">
+  <legend>{{ label }}</legend>
+  <div class="point-rows">
+    {% for p in rows %}
+      <div class="point-row">
+        <input type="hidden" name="{{ kind }}_id" value="{{ p.id or '' }}">
+        <input type="text" name="{{ kind }}_text" value="{{ p.text }}" aria-label="{{ label }}">
+        <button type="button" class="icon" data-remove-row aria-label="Remove">✕</button>
+      </div>
+    {% endfor %}
+    <div class="point-row">
+      <input type="hidden" name="{{ kind }}_id" value="">
+      <input type="text" name="{{ kind }}_text" value="" placeholder="{{ placeholder }}" aria-label="{{ label }}">
+      <button type="button" class="icon" data-remove-row aria-label="Remove">✕</button>
+    </div>
+  </div>
+  <button type="button" class="add-row" data-add-point>+ Add point</button>
+</fieldset>
