@@ -1,0 +1,5 @@
+# Add to /srv/server/Caddyfile (server repo), then: systemctl reload caddy
+# Deliberately NO `log` directive: access logs would capture /join/<key> secret links.
+rugby-coaching.johng.me {
+    reverse_proxy 127.0.0.1:8005
+}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block main %}
+  <h1>Who are you?</h1>
+  <p class="muted">So the plan can say who's running what, and who changed it. You only need to do this once on each phone or browser.</p>
+  <form method="post" action="/who" class="stack">
+    <input type="hidden" name="next" value="{{ next }}">
+    {% for c in coaches %}
+      <button class="choice{% if viewer.coach and viewer.coach.id == c.id %} is-current{% endif %}" name="coach_id" value="{{ c.id }}">{{ c.name }}</button>
+    {% endfor %}
+  </form>
+  <p class="hint">Opened the link from WhatsApp? Its built-in browser keeps its own memory, so you may be asked again in Safari or Chrome.</p>
+{% endblock %}

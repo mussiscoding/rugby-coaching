@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="htmx-config" content='{"includeIndicatorStyles": false}'>
+  <title>{% block title %}{{ app_name }}{% endblock %}</title>
+  <link rel="stylesheet" href="/static/app.css?v={{ asset_version('app.css') }}">
+  <script src="/static/htmx.min.js?v={{ asset_version('htmx.min.js') }}" defer></script>
+</head>
+<body hx-boost="true">
+  <header class="site-header">
+    <a class="brand" href="/">{{ app_name }}</a>
+    {% if viewer and viewer.is_coach %}
+      <a class="who" href="/who">{{ viewer.coach.name if viewer.coach else "Who are you?" }}</a>
+    {% endif %}
+  </header>
+  <main class="page">
+    {% block main %}{% endblock %}
+  </main>
+</body>
+</html>

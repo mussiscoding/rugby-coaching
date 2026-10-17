@@ -1,0 +1,23 @@
+[Unit]
+Description=rugby-coaching session planner
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/srv/rugby-coaching
+ExecStart=/srv/rugby-coaching/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8005
+Restart=always
+RestartSec=5
+
+# Reads the repo, writes only its data dir, talks to one loopback port.
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/srv/rugby-coaching/data
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

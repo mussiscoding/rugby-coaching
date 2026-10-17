@@ -1,0 +1,11 @@
+# Copy to /etc/systemd/system/ (and into the server repo's systemd/ folder), then:
+#   systemctl enable --now project-backup@rugby-coaching.timer
+[Unit]
+Description=Daily backup for rugby-coaching
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
