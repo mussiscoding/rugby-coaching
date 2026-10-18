@@ -53,7 +53,6 @@
       {% if g.why_today %}<p class="why">↳ {{ g.why_today }}</p>{% endif %}
       {% if g.focus %}<ul class="focus">{% for f in g.focus %}<li>{{ f.text }}</li>{% endfor %}</ul>{% endif %}
       {% if is_past and g.how_it_went %}<p class="how">How it went: {{ g.how_it_went }}</p>{% endif %}
-      <a class="group-edit" href="/groups/{{ g.id }}/edit">{{ "Edit" if g.coaches or g.why_today else "+ Coach, why today" }}</a>
     </div>
   {% endmacro %}
 
