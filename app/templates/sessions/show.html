@@ -42,7 +42,7 @@
         <a href="/activities/{{ g.activity_id }}" class="group-name">{{ g.activity_name }}</a>
         {% if g.activity_archived_at %}<span class="badge">deleted activity</span>{% endif %}
       {% else %}
-        <span class="group-name">{{ g.title }}</span>
+        <a href="/groups/{{ g.id }}/edit" class="group-name">{{ g.title }}</a>
       {% endif %}
       {% if g.coaches %}
         <div class="coaches">{% for c in g.coaches %}<span class="coach"><span class="ava{{ ' alt' if c.id % 2 == 0 }}">{{ c.name[0] }}</span>{{ c.name }}</span>{% endfor %}</div>

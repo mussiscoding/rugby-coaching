@@ -245,3 +245,10 @@ body:has(.arrange-box:checked) .arrange-label { background: var(--yellow); color
   font: 800 20px var(--head); text-transform: uppercase; letter-spacing: .03em; border-radius: 999px; box-shadow: 0 8px 20px rgba(43,58,30,.28);
 }
 @media (max-width: 380px) { .lanes-2 .groups { grid-template-columns: 1fr; } }
+
+/* Tap anywhere on a group card to open it: the name's link is stretched over the
+   card, and Edit sits above it as its own target. */
+.group { position: relative; }
+.group-name::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
+.group-edit, .group .badge { position: relative; z-index: 1; }
+.group:active { transform: scale(.99); }
