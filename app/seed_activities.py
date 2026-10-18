@@ -43,8 +43,8 @@ Coach feeds the ball to the attack. Attack plays the overlap on the call; defend
 Two even teams, 30 × 30m or bigger.
 
 ## How to run
-Normal touch. On a touch the ball carrier goes down on one knee to make a "ruck", and the defending team must put in a guard and a bodyguard either side of it. Missing them means a fitness punishment.
-""",  # [guess] the "one knee" mechanic: check this is how it runs
+Normal touch. On a touch the ball carrier goes fully to ground, as if tackled, and presents the ball. The defending team must put in a guard and a bodyguard either side of the ruck, on one knee. Missing them means a fitness punishment.
+""",
     ), ["Draw defenders in", "Get on one edge to create space", "Identify the spaces"],
        ["Players running at spaces", "10 looking up for gaps before receiving the ball", "Defenders talking about guards"]),
 
@@ -103,7 +103,7 @@ The attacking team's goal is to look after the ball and score. The coach calls w
        ["Quick, clean ball on every call", "Attack still scores at level 3"]),  # [guess] what good looks like
 
     ("ruck-body-position", dict(
-        name="Ruck body position", type="skill", default_duration_min=15,  # [guess] minutes
+        name="Ruck body position", type="skill", default_duration_min=20,
         players="3+", coaches_needed=1, space="Small area per three",
         summary="Threes work on a low, powerful body position, then compete for a rolled ball.",
         tags="breakdown,rucking,contact",
