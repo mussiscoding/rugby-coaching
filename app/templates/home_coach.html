@@ -24,6 +24,8 @@
 
   {% if past %}
     <h2>Past sessions</h2>
+    <p class="hint">Open one and use "Copy to a new date" to start this week's plan from it.</p>
     <ul class="cards">{% for s in past %}{{ session_row(s) }}{% endfor %}</ul>
   {% endif %}
+  <p class="footnote"><a href="/deleted">Recently deleted</a></p>
 {% endblock %}

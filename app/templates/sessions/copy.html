@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block main %}
+  <p class="back"><a href="/sessions/{{ session.id }}">← Back to the plan</a></p>
+  <h1>Copy to a new date</h1>
+  <p>Copies the goal, blocks, groups, coaches, "why today" and starred points from <strong>{{ session.date|nice_date }}</strong>.
+     "How it went", session notes and sharing with players start fresh.</p>
+  {% if errors %}<div class="banner warn">{% for e in errors %}<p>{{ e }}</p>{% endfor %}</div>{% endif %}
+  <form method="post" action="/sessions/{{ session.id }}/copy" class="form">
+    <label>New date <input type="date" name="date" value="{{ new_date }}" required></label>
+    <div class="actions"><button class="primary">Copy session</button></div>
+  </form>
+{% endblock %}

@@ -408,11 +408,11 @@ GET  /healthz
 
 ### Phase 4: History, reuse and recovery
 
-- [ ] Coach home: Upcoming (ascending) and Past (descending); each row shows date, goal and block count
-- [ ] Copy flow (D12)
-- [ ] Session notes field (shown on or after the date)
-- [ ] Activity card usage wired up
-- [ ] `/deleted` (topmost archived items only) with Restore; the "Deleted · Undo" banner
+- [x] Coach home: Upcoming (ascending) and Past (descending); each row shows date, goal and block count
+- [x] Copy flow (D12)
+- [x] Session notes field (shown on or after the date)
+- [x] Activity card usage wired up
+- [x] `/deleted` (topmost archived items only) with Restore; the "Deleted · Undo" banner
 
 ### Phase 5: Player view
 

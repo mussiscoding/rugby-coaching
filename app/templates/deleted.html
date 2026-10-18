@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block main %}
+  <p class="back"><a href="/">← Sessions</a></p>
+  <h1>Recently deleted</h1>
+  {% if rows %}
+    <ul class="cards">
+      {% for r in rows %}
+        <li class="deleted-row">
+          <div>
+            <div class="muted small">{{ r.what }} · deleted {{ r.archived_at|when }}</div>
+            <div>{% if r.session_id and r.kind != "session" %}<a href="/sessions/{{ r.session_id }}">{{ r.detail }}</a>{% else %}{{ r.detail or "—" }}{% endif %}</div>
+          </div>
+          <form method="post" action="{{ r.restore }}"><button>Restore</button></form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty"><p>Nothing deleted.</p></div>
+  {% endif %}
+{% endblock %}

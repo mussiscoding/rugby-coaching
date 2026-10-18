@@ -248,3 +248,70 @@ def set_session_archived(conn, session_id: int, archived: bool, coach_id: int) -
                 "UPDATE sessions SET archived_at = ?, archived_by = ? WHERE id = ?", (now_iso(), coach_id, session_id))
         else:
             conn.execute("UPDATE sessions SET archived_at = NULL, archived_by = NULL WHERE id = ?", (session_id,))
+
+
+def copy_session(conn, source_id: int, new_date: str, coach_id: int) -> int:
+    """Copy a session's plan to a new date (D12).
+
+    Copied: goal, start time, blocks, groups, coaches, why today, starred points.
+    Cleared: how it went, session notes, share-with-players.
+    """
+    source = get_session(conn, source_id)
+    now = now_iso()
+    with tx(conn):
+        new_id = conn.execute(
+            """INSERT INTO sessions (date, start_time, goal, created_at, created_by, updated_at, updated_by)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (new_date, source["start_time"], source["goal"], now, coach_id, now, coach_id),
+        ).lastrowid
+        blocks = conn.execute(
+            "SELECT * FROM live_blocks WHERE session_id = ? ORDER BY position, id", (source_id,)).fetchall()
+        for position, block in enumerate(blocks, start=1):
+            block_id = conn.execute(
+                "INSERT INTO blocks (session_id, position, duration_min) VALUES (?, ?, ?)",
+                (new_id, position, block["duration_min"]),
+            ).lastrowid
+            for g in conn.execute("SELECT * FROM live_groups WHERE block_id = ? ORDER BY id", (block["id"],)).fetchall():
+                group_id = conn.execute(
+                    """INSERT INTO block_groups (block_id, label, activity_id, title, why_today)
+                       VALUES (?, ?, ?, ?, ?)""",
+                    (block_id, g["label"], g["activity_id"], g["title"], g["why_today"]),
+                ).lastrowid
+                conn.execute(
+                    """INSERT INTO block_group_coaches (group_id, coach_id)
+                       SELECT ?, coach_id FROM block_group_coaches WHERE group_id = ?""",
+                    (group_id, g["id"]),
+                )
+                conn.execute(
+                    """INSERT INTO group_focus_points (group_id, point_id, custom_text, position)
+                       SELECT ?, point_id, custom_text, position FROM group_focus_points WHERE group_id = ?""",
+                    (group_id, g["id"]),
+                )
+    return new_id
+
+
+def recently_deleted(conn) -> list[dict]:
+    """Only the topmost deleted thing: a block inside a deleted session isn't listed separately."""
+    rows = []
+    for r in conn.execute("SELECT id, date, goal, archived_at FROM sessions WHERE archived_at IS NOT NULL"):
+        rows.append({"kind": "session", "id": r["id"], "what": f"Session · {r['date']}", "detail": r["goal"],
+                     "archived_at": r["archived_at"], "restore": f"/sessions/{r['id']}/restore", "session_id": r["id"]})
+    for r in conn.execute("SELECT id, name, archived_at FROM activities WHERE archived_at IS NOT NULL"):
+        rows.append({"kind": "activity", "id": r["id"], "what": "Activity", "detail": r["name"],
+                     "archived_at": r["archived_at"], "restore": f"/activities/{r['id']}/restore", "session_id": None})
+    for r in conn.execute(
+        """SELECT b.id, b.archived_at, s.id AS session_id, s.date,
+                  (SELECT group_concat(COALESCE(a.name, g.title), ' / ') FROM block_groups g
+                   LEFT JOIN activities a ON a.id = g.activity_id WHERE g.block_id = b.id AND g.archived_at IS NULL) AS names
+           FROM blocks b JOIN sessions s ON s.id = b.session_id
+           WHERE b.archived_at IS NOT NULL AND s.archived_at IS NULL"""):
+        rows.append({"kind": "block", "id": r["id"], "what": f"Block · session {r['date']}", "detail": r["names"] or "",
+                     "archived_at": r["archived_at"], "restore": f"/blocks/{r['id']}/restore", "session_id": r["session_id"]})
+    for r in conn.execute(
+        """SELECT g.id, g.archived_at, g.label, COALESCE(a.name, g.title) AS name, b.session_id, s.date
+           FROM block_groups g JOIN live_blocks b ON b.id = g.block_id JOIN sessions s ON s.id = b.session_id
+           LEFT JOIN activities a ON a.id = g.activity_id WHERE g.archived_at IS NOT NULL"""):
+        detail = f"{r['label']}: {r['name']}" if r["label"] else r["name"]
+        rows.append({"kind": "group", "id": r["id"], "what": f"Group · session {r['date']}", "detail": detail,
+                     "archived_at": r["archived_at"], "restore": f"/groups/{r['id']}/restore", "session_id": r["session_id"]})
+    return sorted(rows, key=lambda r: r["archived_at"], reverse=True)

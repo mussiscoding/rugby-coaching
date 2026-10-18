@@ -19,7 +19,10 @@
 
   <h1>{{ session.date|nice_date }}</h1>
   <p class="meta"><span>{{ session.start_time }} → {{ plan.end }}</span><span>{{ plan.total }} min</span>
-    <a href="/sessions/{{ session.id }}/edit">Edit details</a></p>
+    <a href="/sessions/{{ session.id }}/edit">Edit details</a>
+    <a href="/sessions/{{ session.id }}/copy">Copy to a new date</a></p>
+
+  {% if is_past and session.notes %}<p class="how">Session notes: {{ session.notes }}</p>{% endif %}
 
   <div class="goal">
     <span class="goal-label">Goal</span>

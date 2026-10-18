@@ -186,3 +186,5 @@ a.group-name { text-decoration: none; }
 .checks label { flex-direction: row; align-items: center; gap: 10px; font-weight: 400; min-height: var(--tap); }
 .checks input[type=checkbox] { width: 22px; height: 22px; flex: none; }
 .empty.small, li.empty { list-style: none; }
+.deleted-row { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }

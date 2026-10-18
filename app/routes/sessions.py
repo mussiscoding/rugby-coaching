@@ -1,7 +1,7 @@
 """Building sessions: the plan page, the + picker, blocks, and groups (splits)."""
 
 import re
-from datetime import date
+from datetime import date, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
@@ -134,6 +134,41 @@ def save_session(request: Request, session_id: int, form: FormData = Depends(for
             return render(request, "sessions/form.html", session=session, values=values, errors=errors)
         ses.update_session(conn, session_id, values, coach.id)
     return RedirectResponse(f"/sessions/{session_id}", status_code=303)
+
+
+def next_same_weekday(source: str) -> str:
+    """Next occurrence of the source session's weekday, today or later (D12)."""
+    today = today_london()
+    ahead = (date.fromisoformat(source).weekday() - today.weekday()) % 7
+    return (today + timedelta(days=ahead)).isoformat()
+
+
+@coach.get("/sessions/{session_id}/copy")
+def copy_form(request: Request, session_id: int, coach: Coach = Depends(current_coach)):
+    with db() as conn:
+        session = _session_or_404(conn, session_id)
+    return render(request, "sessions/copy.html", session=session, new_date=next_same_weekday(session["date"]), errors=[])
+
+
+@coach.post("/sessions/{session_id}/copy")
+def copy_session(request: Request, session_id: int, form: FormData = Depends(form_data),
+                 coach: Coach = Depends(current_coach)):
+    new_date = str(form.get("date") or "")
+    with db() as conn:
+        session = _session_or_404(conn, session_id)
+        try:
+            date.fromisoformat(new_date)
+        except ValueError:
+            return render(request, "sessions/copy.html", session=session, new_date=new_date, errors=["Pick a date."])
+        new_id = ses.copy_session(conn, session_id, new_date, coach.id)
+    return RedirectResponse(f"/sessions/{new_id}", status_code=303)
+
+
+@coach.get("/deleted")
+def deleted(request: Request):
+    with db() as conn:
+        rows = ses.recently_deleted(conn)
+    return render(request, "deleted.html", rows=rows)
 
 
 @coach.post("/sessions/{session_id}/archive")
