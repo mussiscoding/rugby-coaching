@@ -37,7 +37,7 @@ code { background: var(--green-tint); padding: 0 4px; border-radius: 4px; }
   position: sticky; top: 0; z-index: 20;
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: calc(env(safe-area-inset-top) + 10px) 16px 10px;
-  background: var(--green) url("tree.svg") no-repeat right -30px center / 120px auto;
+  background: var(--green);
   color: #fff;
 }
 .brand { font: 800 italic 19px/1 var(--head); text-transform: uppercase; color: var(--yellow); text-decoration: none; letter-spacing: .02em; }
@@ -173,7 +173,7 @@ input:focus, textarea:focus, select:focus { outline: 3px solid rgba(247,199,65,.
 /* --- session: hero header, goal, timeline --- */
 .session-hero {
   margin: -14px -16px 0; padding: 14px 16px 30px; color: #fff;
-  background: var(--green) url("tree.svg") no-repeat right -40px top -20px / 210px auto;
+  background: var(--green) url("crest-watermark.png") no-repeat right -34px top -70px / 220px auto;
 }
 .session-hero .back a { color: #dfe8d2; }
 .hero-row { display: flex; gap: 12px; align-items: center; margin-top: 6px; }

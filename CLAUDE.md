@@ -41,7 +41,7 @@ app/
   timing.py       London-time helpers, clock-time layout (reflow), double-booked coaches
   routes/         access.py (join, who, healthz), home.py, activities.py, sessions.py (plan, + picker, blocks, groups, /groups/<id> run view)
   templates/      base.html + pages
-  static/         app.css (club look), fonts.css + fonts/ (self-hosted Barlow; CSP blocks font CDNs), tree.svg (header watermark), app.js, htmx.min.js
+  static/         app.css (club look), fonts.css + fonts/ (self-hosted Barlow; CSP blocks font CDNs), crest-watermark.png (club crest, tinted, header watermark), app.js, htmx.min.js
 tests/            conftest.py, test_access.py, test_timing.py
 deploy/           systemd unit, Caddy snippet, backup timer, deploy.sh
 docs/             brainstorms/, plans/, decisions.md, setup.md, jots/
