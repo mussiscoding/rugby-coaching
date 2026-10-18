@@ -19,7 +19,15 @@
   {% if upcoming %}
     <ul class="cards">{% for s in upcoming %}{{ session_row(s) }}{% endfor %}</ul>
   {% else %}
-    <div class="empty"><p>Nothing planned yet.</p><p><a href="/sessions/new">Plan the next session</a></p></div>
+    <div class="empty">
+      <p><strong>Nothing planned yet.</strong></p>
+      {% if past %}
+        <p class="muted">Start from last time and change what you need.</p>
+        <p><a class="button" href="/sessions/{{ past[0].id }}/copy">Copy last session ({{ past[0].date|day_short }} {{ past[0].date|day_num }} {{ past[0].date|month_short }})</a></p>
+      {% else %}
+        <p class="muted">Tap <strong>+ New</strong> to plan the first one.</p>
+      {% endif %}
+    </div>
   {% endif %}
 
   {% if past %}
