@@ -5,7 +5,7 @@
     <p class="back"><a href="/sessions/{{ session.id }}#block-{{ here.block.id }}">← {{ session.date|day_short }} {{ session.date|day_num }} {{ session.date|month_short }} plan</a></p>
     <div class="run-when">{{ here.timing.clock_start }}–{{ here.timing.clock_end }} · {{ here.block.duration_min }} min
       {% if here.split %}<span class="lane-label">{{ g.label or "Split group" }}</span>{% endif %}</div>
-    <h1 class="run-title">{{ g.activity_name or g.title }}</h1>
+    <h1 class="run-title">{% if activity %}<a href="/activities/{{ activity.id }}" title="Open in the activity library">{{ activity.name }} <span class="run-title-go">›</span></a>{% else %}{{ g.title }}{% endif %}</h1>
     {% if activity %}
       <p class="run-meta">
         <span class="badge badge-{{ activity.type }}">{{ type_label }}</span>

@@ -281,3 +281,5 @@ h2.quiet { font-size: 16px; color: var(--muted); }
 .same-time-link { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--surface); border-radius: var(--radius); border: 2px dashed #cfd6c2; text-decoration: none; color: var(--text); font: 700 17px var(--head); }
 .same-time-link .lane-label { margin: 0; }
 .nav-lane { font: 700 12px var(--head); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.run-title a { color: inherit; text-decoration: none; }
+.run-title-go { color: var(--yellow); font-style: normal; }
