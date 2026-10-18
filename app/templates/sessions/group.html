@@ -69,7 +69,15 @@
   {% endif %}
 
   <nav class="run-nav">
-    {% if prev %}<a href="/groups/{{ prev.group.id }}" class="run-prev"><small>← Before · {{ prev.timing.clock_start }}</small>{% if prev.split %}<span class="nav-lane">{{ prev.group.label or "Split" }}</span>{% endif %}{{ prev.group.activity_name or prev.group.title }}</a>{% else %}<span></span>{% endif %}
-    {% if next %}<a href="/groups/{{ next.group.id }}" class="run-next"><small>Next · {{ next.timing.clock_start }} →</small>{% if next.split %}<span class="nav-lane">{{ next.group.label or "Split" }}</span>{% endif %}{{ next.group.activity_name or next.group.title }}</a>{% endif %}
+    {% for side, slot in (("prev", prev), ("next", next)) %}
+      {% if slot %}
+        <div class="run-box run-{{ side }}">
+          <small>{{ "← Before · " ~ slot.timing.clock_start if side == "prev" else "Next · " ~ slot.timing.clock_start ~ " →" }}{% if slot.split %} · split{% endif %}</small>
+          {% for x in slot.groups %}
+            <a href="/groups/{{ x.id }}">{% if slot.split %}<span class="nav-lane">{{ x.label or "Group " ~ loop.index }}</span>{% endif %}{{ x.activity_name or x.title }}</a>
+          {% endfor %}
+        </div>
+      {% else %}<span></span>{% endif %}
+    {% endfor %}
   </nav>
 {% endblock %}

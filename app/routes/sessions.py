@@ -314,13 +314,11 @@ def view_group(request: Request, group_id: int):
     here = slots[i] | {"split": len(slots[i]["block"]["groups"]) > 1}
     g = next(x for x in here["block"]["groups"] if x["id"] == group_id)
 
-    def landing(slot):
-        """Previous/next go by time slot; in a split, land on the group with the same name."""
+    def neighbour(slot):
+        """The slot before/after, with every group in it (a split lists each one)."""
         if slot is None:
             return None
-        groups = slot["block"]["groups"]
-        same = [x for x in groups if g["label"] and x["label"].lower() == g["label"].lower()]
-        return slot | {"group": (same or groups)[0], "split": len(groups) > 1}
+        return slot | {"groups": slot["block"]["groups"], "split": len(slot["block"]["groups"]) > 1}
 
     starred_ids = {f["point_id"] for f in g["focus"] if f["point_id"]}
     return render(
@@ -331,7 +329,7 @@ def view_group(request: Request, group_id: int):
         other_points=[p for p in points["coaching"] if p["id"] not in starred_ids],
         looks_like=points["looks_like"],
         description=render_description(activity["description"]) if activity else [],
-        prev=landing(slots[i - 1] if i > 0 else None), next=landing(slots[i + 1] if i + 1 < len(slots) else None),
+        prev=neighbour(slots[i - 1] if i > 0 else None), next=neighbour(slots[i + 1] if i + 1 < len(slots) else None),
     )
 
 
