@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS blocks (
 CREATE TABLE IF NOT EXISTS activities (
     id                    INTEGER PRIMARY KEY,
     name                  TEXT NOT NULL,
-    type                  TEXT NOT NULL CHECK (type IN ('warmup', 'skill', 'game')),
+    type                  TEXT NOT NULL CHECK (type IN ('warmup', 'skill', 'game', 'fitness')),
     summary               TEXT NOT NULL DEFAULT '',
     tags                  TEXT NOT NULL DEFAULT '',
     description           TEXT NOT NULL DEFAULT '',

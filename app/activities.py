@@ -6,7 +6,7 @@ from datetime import timedelta
 from app.db import now_iso, tx
 from app.timing import parse_iso, today_london
 
-TYPES = {"warmup": "Warm-up", "skill": "Skill zone", "game": "Game zone"}
+TYPES = {"warmup": "Warm-up", "skill": "Skill zone", "game": "Game zone", "fitness": "Fitness"}
 POINT_KINDS = ("coaching", "looks_like")
 LOCK_HOURS = 2
 

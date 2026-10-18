@@ -83,9 +83,11 @@ button.icon { min-height: 38px; min-width: 38px; padding: 4px 10px; justify-cont
 .badge-warmup { background: #fbecc4; color: #6b4a00; }
 .badge-skill { background: #dfe8d2; color: #2f4a17; }
 .badge-game { background: var(--green-deep); color: var(--yellow); }
+.badge-fitness { background: #f6dcd2; color: #8a2f12; }
 .type-warmup { --type: var(--gold); }
 .type-skill { --type: var(--green); }
 .type-game { --type: var(--green-deep); }
+.type-fitness { --type: #b4532a; }
 
 /* --- chips --- */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }

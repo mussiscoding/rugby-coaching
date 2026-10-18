@@ -10,6 +10,115 @@ from app.db import db, now_iso, tx
 # Each entry: (key, fields, coaching points, what good looks like). `key` is only
 # used below to wire up related links.
 ACTIVITIES = [
+    # --- From John (dictated 2026-10-18). Lines marked [guess] are Claude's fill-ins to check. ---
+    ("overlaps", dict(
+        name="Overlaps", type="skill", default_duration_min=15,  # [guess] minutes
+        players="6–24", coaches_needed=1, space="Channels 10m wide × 20m",  # [guess] players, space
+        summary="2v1 up to 4v3 in channels: fix the first defender and support with depth.",
+        tags="attack,handling,decision-making",
+        description="""## Set up
+Channels about 10m wide. Attackers start on the try line, defenders 10m in front.
+
+## How to run
+Coach feeds the ball to the attack. Attack plays the overlap on the call; defenders touch or tackle depending on the session.
+
+## Progressions
+- 2v1
+- 3v2
+- 4v3
+
+## Variations
+- Passing decisions: one pass to the attacker with no defender on them
+- Create the 2v1: fix the first defender and always pass to the 2nd man, who then has a 2v1
+""",
+    ), ["Fix the first defender", "Depth of support"],
+       ["The first defender is committed before the pass", "Support runners arrive deep and at pace"]),  # [guess] what good looks like
+
+    ("guards-bodyguards", dict(
+        name="Guards and bodyguards touch", type="game", default_duration_min=15,  # [guess] minutes
+        players="16+", coaches_needed=1, space="30 × 30m or bigger",
+        summary="Even-numbers touch where defenders must always set a guard and bodyguard.",
+        tags="attack,defence,game,communication",
+        description="""## Set up
+Two even teams, 30 × 30m or bigger.
+
+## How to run
+Normal touch. On a touch the ball carrier goes down on one knee to make a "ruck", and the defending team must put in a guard and a bodyguard either side of it. Missing them means a fitness punishment.
+""",  # [guess] the "one knee" mechanic: check this is how it runs
+    ), ["Draw defenders in", "Get on one edge to create space", "Identify the spaces"],
+       ["Players running at spaces", "10 looking up for gaps before receiving the ball", "Defenders talking about guards"]),
+
+    ("bounce-5-20", dict(
+        name="5-bounce 20-bounce", type="fitness", default_duration_min=5,
+        players="Any", coaches_needed=1, space="20m × (players) m",
+        summary="Shuttle runs with a drop to the stomach at every line.",
+        tags="fitness,conditioning",
+        description="""## Set up
+Everyone on a line, lying on their stomachs.
+
+## How to run
+- Run out to 5m, down on stomachs
+- Back to the start line, down on stomachs
+- Run out to 20m, down on stomachs
+- Back to the 15m line, down on stomachs
+- Out to the 20m line, down on stomachs
+- Run back to the start line
+Repeat as many times as the session needs.
+
+## Progressions
+- 1, 2, 3 or more repeats before a rest
+""",
+    ), ["Chest all the way to the floor every time", "Drive up and out of the ground"],  # [guess] coaching points
+       ["Everyone touching every line", "Pace held on the last rep"]),  # [guess] what good looks like
+
+    ("lineout-in-front", dict(
+        name="Lineouts: getting in front", type="skill", default_duration_min=30,
+        players="4+ (two lifters, a jumper, a thrower)", coaches_needed=1, space="Touchline, 15m",  # [guess] space
+        summary="Pods of three practise catching over the front lifter's head, not over the jumper's own.",
+        tags="set piece,lineout,forwards",
+        description="""## Set up
+Pods of three (two lifters and a jumper) plus a thrower.
+
+## How to run
+The goal is for the jumper to catch the ball over the head of the front lifter, not over their own head.
+""",
+    ), ["Jumper leans forwards, not straight up", "Front lifter's hands go straight up, not the usual pyramid shape"],
+       ["Ball taken in front, above the front lifter's head"]),  # [guess] what good looks like
+
+    ("come-ruck-123", dict(
+        name="1, 2, 3 come ruck with me", type="game", default_duration_min=15,  # [guess] minutes
+        players="12–30", coaches_needed=1, space="Half pitch",  # [guess] players, space
+        summary="Attack looks after the ball while the coach's call decides how hard defenders can contest.",
+        tags="breakdown,rucking,contact,game",
+        description="""## Set up
+Two equal teams. Half the defenders have shields.
+
+## How to run
+The attacking team's goal is to look after the ball and score. The coach calls what the defenders can do:
+- 1: defenders just make tackles
+- 2: defenders can counter-ruck
+- 3: defenders can jackal
+""",
+    ), ["Look after the ball first", "Support arrives before the defender can contest"],  # [guess] coaching points
+       ["Quick, clean ball on every call", "Attack still scores at level 3"]),  # [guess] what good looks like
+
+    ("ruck-body-position", dict(
+        name="Ruck body position", type="skill", default_duration_min=15,  # [guess] minutes
+        players="3+", coaches_needed=1, space="Small area per three",
+        summary="Threes work on a low, powerful body position, then compete for a rolled ball.",
+        tags="breakdown,rucking,contact",
+        description="""## Set up
+Groups of three.
+
+## How to run
+- One-on-one body position work (scrum-style), with the third player assessing the form of the other two
+- Rucking drill: all three lie on their backs, facing the same way, about an arm's length apart. The middle player has the ball and rolls to one side. Whoever they roll to is the attack, looking after the ruck; the other tries to get the ball off them.
+""",  # [guess] "one-on-one Scrum position work" and "rocking drill" were read as body-position work and a rucking drill
+    ), ["Tower of power", "Hips below shoulders", "Feet in the right position",
+        "Too far forward and we can't get low enough", "Too far back and we have no power"],
+       ["Flat backs, hips below shoulders", "The ball stays on the attack's side"]),  # [guess] what good looks like
+
+    # --- Claude's original starters: still to review (keep / change / drop). ---
     # --- Warm-ups -------------------------------------------------------------
     ("touch", dict(
         name="Touch warm-up", type="warmup", default_duration_min=15,
@@ -81,27 +190,6 @@ Build intensity in stages: shoulder taps, hand wrestles for position, walking hi
        ["Safe head position every time", "Players ready to move into full contact work"]),
 
     # --- Skill zones -------------------------------------------------------------
-    ("overlap", dict(
-        name="Overlap attack", type="skill", default_duration_min=15,
-        players="6–24", coaches_needed=1, space="Channels 10m wide × 20m",
-        summary="Attackers with an extra player learn to fix defenders and pass at the right moment.",
-        tags="attack,handling,decision-making",
-        description="""## Set up
-Channels 10m wide. Attackers start on the try line, defenders 10m in front.
-
-## How to run
-Coach feeds the ball to the attack. Attack goes on the coach's call; defenders can touch or tackle depending on the session.
-
-## Progressions
-- 2v1
-- 3v2
-- 4v3
-- Defenders start closer, so decisions are faster
-- Defender chooses who to mark at the last moment
-""",
-    ), ["Fix the defender: run at their inside shoulder", "Pass early enough that the receiver can run onto it", "Support runner stays deep and calls"],
-       ["The overlap is used, not wasted inside", "Ball carrier draws a defender before passing"]),
-
     ("ruck-clear", dict(
         name="Ruck clear-out 2v1", type="skill", default_duration_min=15,
         players="6–18", coaches_needed=1, space="10 × 10m grids",
@@ -234,25 +322,6 @@ Carrier hits the shield, goes to ground and places the ball back at arm's length
        ["Ball clearly presented for the scrum half", "Carrier lands safely every time"]),
 
     # --- Game zones ----------------------------------------------------------------
-    ("conditioned-touch", dict(
-        name="Conditioned touch", type="game", default_duration_min=15,
-        players="10–30", coaches_needed=1, space="Half pitch",
-        summary="Touch with rules that reward the skill you've just practised.",
-        tags="handling,attack,game",
-        description="""## Set up
-Two even teams, half pitch.
-
-## How to run
-Normal touch, plus one condition linked to tonight's skill. Change the condition if it isn't producing the behaviour you want.
-
-## Progressions
-- Every pass must go past a defender's shoulder
-- Tries only count from a three-pass move
-- Defence numbers reduced
-""",
-    ), ["Look for space early", "Same cues as the skill zone"],
-       ["The skill from the skill zone shows up in the game"]),
-
     ("numbers-up", dict(
         name="Numbers-up attack game", type="game", default_duration_min=15,
         players="12–24", coaches_needed=1, space="30 × 22m",
@@ -345,8 +414,12 @@ Call the lineout and move. Run it walk-through first, then at full speed with de
 ]
 
 RELATED = [
-    ("overlap", "numbers-up"), ("ruck-clear", "ruck-game"), ("presentation", "ruck-game"),
-    ("tackle", "defence-game"), ("line-speed", "defence-game"), ("passing-move", "conditioned-touch"),
+    # From John
+    ("overlaps", "guards-bodyguards"), ("ruck-body-position", "come-ruck-123"),
+    ("lineout-in-front", "lineout"), ("lineout-in-front", "set-piece-phase"),  # "all other lineout and throwing" ones
+    # Claude's starters (to review)
+    ("overlaps", "numbers-up"), ("ruck-clear", "ruck-game"), ("presentation", "ruck-game"),
+    ("tackle", "defence-game"), ("line-speed", "defence-game"), ("passing-move", "guards-bodyguards"),
     ("kicking", "kick-tennis"), ("lineout", "set-piece-phase"), ("contact-prep", "tackle"),
 ]
 
