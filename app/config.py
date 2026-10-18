@@ -22,7 +22,8 @@ class Settings(BaseSettings):
 
     app_name: str = "Rugby Coaching"
     coaches: str = "John"
-    default_start_time: str = "19:30"
+    default_start_time: str = "18:30"
+    training_weekday: int = 2  # Monday = 0 … Sunday = 6; new sessions default to the next one
     tz: str = "Europe/London"
 
     data_dir: Path = ROOT / "data"

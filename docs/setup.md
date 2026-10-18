@@ -26,7 +26,8 @@ Each machine's `.env` is its environment; there's no global "prod mode" switch.
 | `HTTPS_ONLY` | `false` | `true`; marks the cookie `Secure` and turns on the startup key checks |
 | `APP_NAME` | anything | The display name; the only place the brand lives |
 | `COACHES` | `John,Coach Two,…` | The real coach names, comma-separated |
-| `DEFAULT_START_TIME` | `19:30` | Training start time |
+| `DEFAULT_START_TIME` | `18:30` | Training start time |
+| `TRAINING_WEEKDAY` | `2` | Training day (Monday = 0); new sessions default to the next one |
 
 Generate a prod secret with:
 

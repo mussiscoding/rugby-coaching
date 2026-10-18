@@ -84,7 +84,9 @@ def _what(form: FormData) -> tuple[int | None, str | None]:
 
 @coach.get("/sessions/new")
 def new_session(request: Request, coach: Coach = Depends(current_coach)):
-    values = {"date": today_london().isoformat(), "start_time": settings.default_start_time, "goal": "", "notes": ""}
+    today = today_london()
+    next_training = today + timedelta(days=(settings.training_weekday - today.weekday()) % 7)
+    values = {"date": next_training.isoformat(), "start_time": settings.default_start_time, "goal": "", "notes": ""}
     return render(request, "sessions/form.html", session=None, values=values, errors=[])
 
 
