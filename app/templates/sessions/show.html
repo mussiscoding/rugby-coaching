@@ -36,6 +36,9 @@
 
   {% macro group_card(g, split, index) %}
     <div class="group type-{{ g.activity_type or 'other' }}">
+      <form method="post" action="/groups/{{ g.id }}/archive" class="group-remove">
+        <button class="icon" aria-label="{{ 'Remove this group' if split else 'Remove this block' }}">✕</button>
+      </form>
       {% if split %}<span class="lane-label">{{ g.label or "Group " ~ index }}</span>
       {% else %}<div class="group-kind"><span>{{ types[g.activity_type] if g.activity_type else "" }}</span></div>{% endif %}
       {% if g.activity_id %}
@@ -75,9 +78,8 @@
             </span>
             <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="up"><button class="icon" aria-label="Move up" {% if loop.first %}disabled{% endif %}>↑</button></form>
             <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="down"><button class="icon" aria-label="Move down" {% if loop.last %}disabled{% endif %}>↓</button></form>
-            <form method="post" action="/blocks/{{ block.id }}/archive" class="inline"><button class="icon" aria-label="Remove block">✕</button></form>
-            <a class="tool-link" href="/sessions/{{ session.id }}/add?block_id={{ block.id }}">+ Split</a>
           </div>
+          <a class="split-link" href="/sessions/{{ session.id }}/add?block_id={{ block.id }}">+ Split: add a group alongside</a>
         </div>
       </section>
     {% endfor %}

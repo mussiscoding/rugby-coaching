@@ -238,7 +238,6 @@ body:has(.arrange-box:checked) .arrange-label { background: var(--yellow); color
 .stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
 .stepper button { border: 0; border-radius: 0; min-height: 36px; min-width: 38px; justify-content: center; padding: 0 8px; font-size: 18px; }
 .stepper span { font: 700 16px var(--head); padding: 0 6px; min-width: 52px; text-align: center; }
-.tool-link { font-size: 14px; font-weight: 600; margin-left: auto; }
 .fab {
   position: sticky; bottom: calc(env(safe-area-inset-bottom) + 16px); z-index: 10; display: flex; justify-content: center; align-items: center;
   width: 210px; min-height: 52px; margin: 18px auto 0; background: var(--yellow); color: var(--green-deep); text-decoration: none;
@@ -250,5 +249,10 @@ body:has(.arrange-box:checked) .arrange-label { background: var(--yellow); color
    card, and Edit sits above it as its own target. */
 .group { position: relative; }
 .group-name::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
-.group-edit, .group .badge { position: relative; z-index: 1; }
+.group-edit, .group .badge, .group-remove { position: relative; z-index: 1; }
+.group { padding-right: 46px; }
+.group-remove { position: absolute; top: 6px; right: 6px; }
+.group-remove button { min-height: 34px; min-width: 34px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 17px; border-radius: 50%; }
+.group-remove button:hover { background: var(--green-tint); color: var(--text); }
+.split-link { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600; }
 .group:active { transform: scale(.99); }
