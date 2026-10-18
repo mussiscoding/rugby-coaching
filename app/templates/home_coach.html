@@ -2,15 +2,15 @@
 {% block main %}
   <div class="row-between">
     <h1>Sessions</h1>
-    <a class="button primary" href="/sessions/new">+ New session</a>
+    <a class="button primary" href="/sessions/new">+ New</a>
   </div>
 
   {% macro session_row(s) %}
     <li>
-      <a class="card-link" href="/sessions/{{ s.id }}">
-        <span class="card-title">{{ s.date|nice_date }}</span>
-        <span class="muted small">{{ s.start_time }} · {{ s.block_count }} block{{ "s" if s.block_count != 1 }}</span>
-        <span class="card-summary">{{ s.goal or "No goal yet" }}</span>
+      <a class="card-link session-link" href="/sessions/{{ s.id }}">
+        <span class="datetile"><span>{{ s.date|day_short }}</span><b>{{ s.date|day_num }}</b><span>{{ s.date|month_short }}</span></span>
+        <span class="card-title">{{ s.goal or "No goal yet" }}</span>
+        <span class="card-summary">{{ s.start_time }} · {{ s.block_count }} block{{ "s" if s.block_count != 1 }}</span>
       </a>
     </li>
   {% endmacro %}

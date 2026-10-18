@@ -110,7 +110,7 @@ def show_session(request: Request, session_id: int):
         block["clash_names"] = sorted({c["name"] for g in block["groups"] for c in g["coaches"] if c["id"] in clash})
     return render(
         request, "sessions/show.html",
-        session=session, blocks=blocks, plan=plan,
+        session=session, blocks=blocks, plan=plan, types=acts.TYPES,
         is_past=session["date"] <= today_london().isoformat(),
         scroll_to=request.session.pop("scroll_to", None),
         undo=request.session.pop("undo", None),

@@ -2,78 +2,93 @@
 {% block title %}{{ session.date|nice_date }} · {{ app_name }}{% endblock %}
 {% block main %}
 <div {% if scroll_to %}data-scroll-to="{{ scroll_to }}"{% endif %}>
-  <p class="back"><a href="/">← Sessions</a></p>
-
-  {% if session.archived_at %}
-    <div class="banner warn">
-      This session was deleted.
-      <form method="post" action="/sessions/{{ session.id }}/restore" class="inline"><button>Restore it</button></form>
+  <header class="session-hero">
+    <p class="back"><a href="/">← Sessions</a></p>
+    <div class="hero-row">
+      <div class="hero-date"><span>{{ session.date|day_short }}</span><b>{{ session.date|day_num }}</b><span>{{ session.date|month_short }}</span></div>
+      <div>
+        <div class="hero-title">Training</div>
+        <div class="hero-sub">{{ session.start_time }} → {{ plan.end }} · {{ plan.total }} min</div>
+      </div>
     </div>
-  {% endif %}
-  {% if undo %}
-    <div class="banner">
-      {{ "Block" if undo[0] == "blocks" else "Group" }} removed.
-      <form method="post" action="/{{ 'blocks' if undo[0] == 'blocks' else 'groups' }}/{{ undo[1] }}/restore" class="inline"><button>Undo</button></form>
+    <div class="hero-links">
+      <a href="/sessions/{{ session.id }}/edit">Edit details</a>
+      <a href="/sessions/{{ session.id }}/copy">Copy to a new date</a>
+      {% if blocks %}<label for="arrange" class="arrange-label"><span class="off">Change times &amp; order</span><span class="on">Done arranging</span></label>{% endif %}
     </div>
-  {% endif %}
-
-  <h1>{{ session.date|nice_date }}</h1>
-  <p class="meta"><span>{{ session.start_time }} → {{ plan.end }}</span><span>{{ plan.total }} min</span>
-    <a href="/sessions/{{ session.id }}/edit">Edit details</a>
-    <a href="/sessions/{{ session.id }}/copy">Copy to a new date</a></p>
-
-  {% if is_past and session.notes %}<p class="how">Session notes: {{ session.notes }}</p>{% endif %}
+  </header>
 
   <div class="goal">
-    <span class="goal-label">Goal</span>
-    {% if session.goal %}<p>{{ session.goal }}</p>{% else %}<p class="muted"><a href="/sessions/{{ session.id }}/edit">Add a goal</a> — every block should link back to it.</p>{% endif %}
+    <span class="goal-label">GOAL</span>
+    {% if session.goal %}<p>{{ session.goal }}</p>
+    {% else %}<p class="muted"><a href="/sessions/{{ session.id }}/edit">Add a goal</a> — every block should link back to it.</p>{% endif %}
   </div>
 
-  {% for block in blocks %}
-    {% set split = block.groups|length > 1 %}
-    <section class="block{% if split %} is-split{% endif %}" id="block-{{ block.id }}">
-      <div class="block-head">
-        <span class="block-time">{{ block.timing.rel_start }}–{{ block.timing.rel_end }}<span class="muted"> · {{ block.timing.clock_start }}–{{ block.timing.clock_end }}</span></span>
-        <div class="block-tools">
-          <form method="post" action="/blocks/{{ block.id }}" class="inline duration">
-            <input type="number" name="duration" value="{{ block.duration_min }}" min="1" max="180" inputmode="numeric" data-autosubmit aria-label="Minutes">
-            <span class="muted">min</span>
-          </form>
-          <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="up"><button class="icon" aria-label="Move up" {% if loop.first %}disabled{% endif %}>↑</button></form>
-          <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="down"><button class="icon" aria-label="Move down" {% if loop.last %}disabled{% endif %}>↓</button></form>
-          <form method="post" action="/blocks/{{ block.id }}/archive" class="inline"><button class="icon" aria-label="Remove block">✕</button></form>
-        </div>
-      </div>
+  {% if session.archived_at %}
+    <div class="banner warn">This session was deleted.
+      <form method="post" action="/sessions/{{ session.id }}/restore" class="inline"><button>Restore it</button></form></div>
+  {% endif %}
+  {% if undo %}
+    <div class="banner">{{ "Block" if undo[0] == "blocks" else "Group" }} removed.
+      <form method="post" action="/{{ 'blocks' if undo[0] == 'blocks' else 'groups' }}/{{ undo[1] }}/restore" class="inline"><button>Undo</button></form></div>
+  {% endif %}
+  {% if is_past and session.notes %}<p class="session-notes">Session notes: {{ session.notes }}</p>{% endif %}
 
-      {% if block.clash_names %}
-        <p class="clash">⚠ {{ block.clash_names|join(" and ") }} {{ "is" if block.clash_names|length == 1 else "are" }} in two places at once</p>
+  {% macro group_card(g, split, index) %}
+    <div class="group type-{{ g.activity_type or 'other' }}">
+      {% if split %}<span class="lane-label">{{ g.label or "Group " ~ index }}</span>
+      {% else %}<div class="group-kind"><span>{{ types[g.activity_type] if g.activity_type else "" }}</span></div>{% endif %}
+      {% if g.activity_id %}
+        <a href="/activities/{{ g.activity_id }}" class="group-name">{{ g.activity_name }}</a>
+        {% if g.activity_archived_at %}<span class="badge">deleted activity</span>{% endif %}
+      {% else %}
+        <span class="group-name">{{ g.title }}</span>
       {% endif %}
+      {% if g.coaches %}
+        <div class="coaches">{% for c in g.coaches %}<span class="coach"><span class="ava{{ ' alt' if c.id % 2 == 0 }}">{{ c.name[0] }}</span>{{ c.name }}</span>{% endfor %}</div>
+      {% endif %}
+      {% if g.why_today %}<p class="why">↳ {{ g.why_today }}</p>{% endif %}
+      {% if g.focus %}<ul class="focus">{% for f in g.focus %}<li>{{ f.text }}</li>{% endfor %}</ul>{% endif %}
+      {% if is_past and g.how_it_went %}<p class="how">How it went: {{ g.how_it_went }}</p>{% endif %}
+      <a class="group-edit" href="/groups/{{ g.id }}/edit">{{ "Edit" if g.coaches or g.why_today else "+ Coach, why today" }}</a>
+    </div>
+  {% endmacro %}
 
-      <div class="groups">
-        {% for g in block.groups %}
-          <div class="group">
-            {% if split %}<div class="group-label">{{ g.label or "Group " ~ loop.index }}</div>{% endif %}
-            <div class="group-what">
-              {% if g.activity_id %}
-                <a href="/activities/{{ g.activity_id }}" class="group-name">{{ g.activity_name }}</a>
-                {% if g.activity_archived_at %}<span class="badge">deleted activity</span>{% endif %}
-              {% else %}
-                <span class="group-name">{{ g.title }}</span>
-              {% endif %}
-            </div>
-            {% if g.coaches %}<div class="group-coaches">{{ g.coaches|map(attribute="name")|join(" & ") }}</div>{% endif %}
-            {% if g.why_today %}<p class="why">↳ {{ g.why_today }}</p>{% endif %}
-            {% if g.focus %}<ul class="focus">{% for f in g.focus %}<li>★ {{ f.text }}</li>{% endfor %}</ul>{% endif %}
-            {% if is_past and g.how_it_went %}<p class="how">How it went: {{ g.how_it_went }}</p>{% endif %}
-            <a class="group-edit" href="/groups/{{ g.id }}/edit">Edit{% if not g.coaches and not g.why_today %} — add coach, why today{% endif %}</a>
+  <input type="checkbox" id="arrange" class="arrange-box" data-remember="arrange-{{ session.id }}">
+  <div class="timeline">
+    {% for block in blocks %}
+      {% set n = block.groups|length %}
+      <section class="slot" id="block-{{ block.id }}">
+        <div class="when"><b>{{ block.timing.clock_start }}</b><span>{{ block.duration_min }} min</span></div>
+        <div class="rail"></div>
+        <div class="block-body {{ 'lanes-2' if n == 2 else ('lanes-many' if n > 2 else '') }}">
+          {% if n > 1 %}<div class="split-head">Split · {{ n }} groups at once · {{ block.timing.rel_start }}–{{ block.timing.rel_end }}</div>{% endif %}
+          {% if block.clash_names %}<p class="clash">⚠ {{ block.clash_names|join(" and ") }} {{ "is" if block.clash_names|length == 1 else "are" }} in two places at once</p>{% endif %}
+          <div class="groups">
+            {% for g in block.groups %}{{ group_card(g, n > 1, loop.index) }}{% endfor %}
           </div>
-        {% endfor %}
-      </div>
-      <a class="add-group" href="/sessions/{{ session.id }}/add?block_id={{ block.id }}">+ Split: add a group alongside</a>
-    </section>
-  {% endfor %}
+          <div class="block-tools">
+            <span class="stepper">
+              <form method="post" action="/blocks/{{ block.id }}" class="inline"><input type="hidden" name="duration" value="{{ [block.duration_min - 5, 1]|max }}"><button aria-label="5 minutes shorter">−</button></form>
+              <span>{{ block.duration_min }} min</span>
+              <form method="post" action="/blocks/{{ block.id }}" class="inline"><input type="hidden" name="duration" value="{{ [block.duration_min + 5, 180]|min }}"><button aria-label="5 minutes longer">+</button></form>
+            </span>
+            <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="up"><button class="icon" aria-label="Move up" {% if loop.first %}disabled{% endif %}>↑</button></form>
+            <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="down"><button class="icon" aria-label="Move down" {% if loop.last %}disabled{% endif %}>↓</button></form>
+            <form method="post" action="/blocks/{{ block.id }}/archive" class="inline"><button class="icon" aria-label="Remove block">✕</button></form>
+            <a class="tool-link" href="/sessions/{{ session.id }}/add?block_id={{ block.id }}">+ Split</a>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+    {% if blocks %}
+      <div class="slot finish"><div class="when"><b>{{ plan.end }}</b></div><div class="rail"></div><div class="finish-label">Finish</div></div>
+    {% else %}
+      <div class="empty"><p><strong>Nothing planned yet.</strong></p><p class="muted">Tap “Add block” to pick the first activity.</p></div>
+    {% endif %}
+  </div>
 
-  <a class="add-block" href="/sessions/{{ session.id }}/add">+ Add block</a>
+  <a class="fab" href="/sessions/{{ session.id }}/add">+ Add block</a>
 
   <p class="footnote">{% if session.updated_by_name %}Last edited by {{ session.updated_by_name }}, {{ session.updated_at|when }}.{% endif %}</p>
   {% if not session.archived_at %}

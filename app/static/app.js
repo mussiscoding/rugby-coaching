@@ -103,7 +103,19 @@
   }
   document.addEventListener("htmx:afterSettle", function () { setTimeout(scrollToMarked, 0); });
 
+  // --- Remember "Change times & order" while you make several changes ---------
+  function restoreToggles(root) {
+    (root || document).querySelectorAll("[data-remember]").forEach(function (box) {
+      try { box.checked = sessionStorage.getItem(box.dataset.remember) === "1"; } catch (e) {}
+    });
+  }
+  document.addEventListener("change", function (e) {
+    if (!e.target.matches("[data-remember]")) return;
+    try { sessionStorage.setItem(e.target.dataset.remember, e.target.checked ? "1" : "0"); } catch (err) {}
+  });
+
   function init(root) {
+    restoreToggles(root);
     (root || document).querySelectorAll("[data-tag-input]").forEach(initTagInput);
   }
   document.addEventListener("DOMContentLoaded", scrollToMarked);

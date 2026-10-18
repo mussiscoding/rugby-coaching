@@ -33,6 +33,18 @@ def nice_date(value: str) -> str:
     return date.fromisoformat(value).strftime("%a %-d %b %Y")
 
 
+def day_short(value: str) -> str:
+    return date.fromisoformat(value).strftime("%a")
+
+
+def day_num(value: str) -> str:
+    return str(date.fromisoformat(value).day)
+
+
+def month_short(value: str) -> str:
+    return date.fromisoformat(value).strftime("%b")
+
+
 def clock(start_time: str, minutes: int) -> str:
     """'19:30' + 50 → '20:20' (wraps past midnight)."""
     h, m = (int(x) for x in start_time.split(":"))

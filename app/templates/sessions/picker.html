@@ -25,7 +25,7 @@
       <h2>Goes well after the last block</h2>
       <ul class="cards">
         {% for a in suggested %}
-          <li><a class="card-link" href="{{ base }}/{{ a.id }}{{ '?block_id=%d' % block.id if block }}">
+          <li><a class="card-link type-{{ a.type }}" href="{{ base }}/{{ a.id }}{{ '?block_id=%d' % block.id if block }}">
             <span class="card-title">{{ a.name }}</span><span class="badge badge-{{ a.type }}">{{ types[a.type] }}</span></a></li>
         {% endfor %}
       </ul>
@@ -33,7 +33,7 @@
     {% endif %}
     <ul class="cards">
       {% for a in results %}
-        <li><a class="card-link" href="{{ base }}/{{ a.id }}{{ '?block_id=%d' % block.id if block }}">
+        <li><a class="card-link type-{{ a.type }}" href="{{ base }}/{{ a.id }}{{ '?block_id=%d' % block.id if block }}">
           <span class="card-title">{{ a.name }}</span>
           <span class="badge badge-{{ a.type }}">{{ types[a.type] }}</span>
           {% if a.summary %}<span class="card-summary">{{ a.summary }}</span>{% endif %}

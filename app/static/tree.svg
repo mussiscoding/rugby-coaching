@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 270" fill="none" stroke="#8fae6a" stroke-opacity=".38" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Our own outline tree in an oval, echoing the club's Instagram watermark. -->
+  <ellipse cx="100" cy="135" rx="92" ry="128"/>
+  <path d="M100 250V36"/>
+  <path d="M100 210c-14-10-34-16-50-34M100 210c14-10 34-16 50-34"/>
+  <path d="M100 168c-12-8-30-14-42-30M100 168c12-8 30-14 42-30"/>
+  <path d="M100 126c-10-7-24-12-34-26M100 126c10-7 24-12 34-26"/>
+  <path d="M100 86c-8-6-18-10-26-21M100 86c8-6 18-10 26-21"/>
+  <path d="M100 36c-6-10-6-20 0-28 6 8 6 18 0 28z"/>
+  <path d="M74 65c-12-2-18-10-20-20 11 1 18 8 20 20zM126 65c12-2 18-10 20-20-11 1-18 8-20 20z"/>
+  <path d="M66 100c-13-1-21-9-24-20 12 0 20 8 24 20zM134 100c13-1 21-9 24-20-12 0-20 8-24 20z"/>
+  <path d="M58 138c-14-1-23-10-26-22 13 0 22 9 26 22zM142 138c14-1 23-10 26-22-13 0-22 9-26 22z"/>
+  <path d="M50 176c-14 0-24-9-28-21 13-1 23 8 28 21zM150 176c14 0 24-9 28-21-13-1-23 8-28 21z"/>
+</svg>
