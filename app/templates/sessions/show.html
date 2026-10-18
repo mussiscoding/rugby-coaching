@@ -42,10 +42,10 @@
       {% if split %}<span class="lane-label">{{ g.label or "Group " ~ index }}</span>
       {% else %}<div class="group-kind"><span>{{ types[g.activity_type] if g.activity_type else "" }}</span></div>{% endif %}
       {% if g.activity_id %}
-        <a href="/activities/{{ g.activity_id }}" class="group-name">{{ g.activity_name }}</a>
+        <a href="/groups/{{ g.id }}" class="group-name">{{ g.activity_name }}</a>
         {% if g.activity_archived_at %}<span class="badge">deleted activity</span>{% endif %}
       {% else %}
-        <a href="/groups/{{ g.id }}/edit" class="group-name">{{ g.title }}</a>
+        <a href="/groups/{{ g.id }}" class="group-name">{{ g.title }}</a>
       {% endif %}
       {% if g.coaches %}
         <div class="coaches">{% for c in g.coaches %}<span class="coach"><span class="ava{{ ' alt' if c.id % 2 == 0 }}">{{ c.name[0] }}</span>{{ c.name }}</span>{% endfor %}</div>

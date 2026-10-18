@@ -56,3 +56,9 @@ Coaches are filled from the `COACHES` setting and never deleted; leavers get `ac
 ## Frugal testing (D23)
 
 This is a local club tool, so tests cover only access control, player-view redaction and timing maths.
+
+## Running a session vs building activities (D27, John, 2026-10-18)
+
+Tapping a card on a plan opens `/groups/<id>`: the activity as it runs **in this session**. It shows the time and group, who's leading, why today (with the session goal), the starred focus points first, then the other coaching points, what good looks like, set up / how to run / progressions, and previous / next through the session. Editing for this session (coaches, why today, points) happens from there.
+
+The library card (`/activities/<id>`) is only reached from the Activities tab. It's where the activity itself gets built and edited. This separates "build / run a session" from "build / edit activities".

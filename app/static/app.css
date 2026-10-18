@@ -257,3 +257,21 @@ body:has(.arrange-box:checked) .arrange-label { background: var(--yellow); color
 .group-remove button:hover { background: var(--green-tint); color: var(--text); }
 .split-link { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600; }
 .group:active { transform: scale(.99); }
+
+/* --- a group as it runs in a session (plan + activity together) --- */
+.run-hero { padding-bottom: 32px; }
+.run-when { font: 700 18px var(--head); color: var(--yellow); display: flex; gap: 10px; align-items: center; margin-top: 6px; }
+.run-title { color: #fff; font-size: 34px; margin: 4px 0 6px; }
+.run-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; margin: 0; font-size: 15px; color: #e3eadb; }
+.goal-context { font-size: 14px !important; font-weight: 400 !important; color: var(--muted); margin-top: 6px !important; }
+.run-leads { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 14px 0; }
+.run-label { font: 700 13px var(--head); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.run-edit { margin-left: auto; min-height: 38px; padding: 6px 12px; font-size: 15px; }
+.focus-big li { font-size: 19px; font-weight: 600; }
+h2.quiet { font-size: 16px; color: var(--muted); }
+.points.quiet li { color: var(--muted); font-size: 15px; }
+.points.quiet li::before { content: "·"; color: var(--muted); font-size: 22px; line-height: 18px; }
+.run-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0 0; }
+.run-nav a { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; background: var(--surface); border-radius: var(--radius); text-decoration: none; color: var(--text); font: 700 17px/1.15 var(--head); box-shadow: 0 2px 8px rgba(43,58,30,.08); }
+.run-nav small { font: 600 13px var(--head); color: var(--green); letter-spacing: .06em; }
+.run-next { text-align: right; grid-column: 2; }

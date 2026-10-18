@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{{ g.activity_name or g.title }} · {{ app_name }}{% endblock %}
+{% block main %}
+  <header class="session-hero run-hero">
+    <p class="back"><a href="/sessions/{{ session.id }}#block-{{ here.block.id }}">← {{ session.date|day_short }} {{ session.date|day_num }} {{ session.date|month_short }} plan</a></p>
+    <div class="run-when">{{ here.timing.clock_start }}–{{ here.timing.clock_end }} · {{ here.block.duration_min }} min
+      {% if here.split %}<span class="lane-label">{{ g.label or "Split group" }}</span>{% endif %}</div>
+    <h1 class="run-title">{{ g.activity_name or g.title }}</h1>
+    {% if activity %}
+      <p class="run-meta">
+        <span class="badge badge-{{ activity.type }}">{{ type_label }}</span>
+        {% if activity.players %}<span>{{ activity.players }} players</span>{% endif %}
+        {% if activity.space %}<span>{{ activity.space }}</span>{% endif %}
+      </p>
+    {% endif %}
+  </header>
+
+  <div class="goal">
+    <span class="goal-label">WHY TODAY</span>
+    {% if g.why_today %}<p>{{ g.why_today }}</p>{% else %}<p class="muted"><a href="/groups/{{ g.id }}/edit?from=view">Add why today</a></p>{% endif %}
+    {% if session.goal %}<p class="goal-context">Session goal: {{ session.goal }}</p>{% endif %}
+  </div>
+
+  <div class="run-leads">
+    {% if g.coaches %}
+      <span class="run-label">Leading</span>
+      <div class="coaches">{% for c in g.coaches %}<span class="coach"><span class="ava{{ ' alt' if c.id % 2 == 0 }}">{{ c.name[0] }}</span>{{ c.name }}</span>{% endfor %}</div>
+    {% else %}
+      <a href="/groups/{{ g.id }}/edit?from=view">+ Who's leading this?</a>
+    {% endif %}
+    <a class="button run-edit" href="/groups/{{ g.id }}/edit?from=view">Edit for this session</a>
+  </div>
+
+  {% if g.focus or other_points or looks_like %}
+    <div class="panel key">
+      {% if g.focus %}
+        <h2>Focus today</h2>
+        <ul class="points focus-big">{% for f in g.focus %}<li>{{ f.text }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if other_points %}
+        <h2 class="{{ 'quiet' if g.focus }}">{{ "Other coaching points" if g.focus else "Coaching points" }}</h2>
+        <ul class="points {{ 'quiet' if g.focus }}">{% for p in other_points %}<li>{{ p.text }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if looks_like %}
+        <h2>What good looks like</h2>
+        <ul class="points watch">{% for p in looks_like %}<li>{{ p.text }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if description or (activity and activity.video_url) %}
+    <div class="panel">
+      {% for b in description %}
+        {% if b.kind == "h" %}<h2>{{ b.text }}</h2>
+        {% elif b.kind == "ul" %}<ul>{% for item in b["items"] %}<li>{{ item }}</li>{% endfor %}</ul>
+        {% else %}<p>{% for line in b.lines %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>{% endif %}
+      {% endfor %}
+      {% if activity.video_url %}<p><a href="{{ activity.video_url }}" target="_blank" rel="noopener noreferrer">▶ Watch the video</a></p>{% endif %}
+    </div>
+  {% endif %}
+
+  <nav class="run-nav">
+    {% if prev %}<a href="/groups/{{ prev.group.id }}" class="run-prev"><small>← {{ prev.timing.clock_start }}</small>{{ prev.group.activity_name or prev.group.title }}</a>{% else %}<span></span>{% endif %}
+    {% if next %}<a href="/groups/{{ next.group.id }}" class="run-next"><small>{{ next.timing.clock_start }} →</small>{{ next.group.activity_name or next.group.title }}</a>{% endif %}
+  </nav>
+{% endblock %}

@@ -39,7 +39,7 @@ app/
   seed_activities.py  starter activities, inserted only into an empty library
   text.py         description → headings/paragraphs/bullets; tag + video URL helpers
   timing.py       London-time helpers, clock-time layout (reflow), double-booked coaches
-  routes/         access.py (join, who, healthz), home.py, activities.py, sessions.py (plan, + picker, blocks, groups)
+  routes/         access.py (join, who, healthz), home.py, activities.py, sessions.py (plan, + picker, blocks, groups, /groups/<id> run view)
   templates/      base.html + pages
   static/         app.css (club look), fonts.css + fonts/ (self-hosted Barlow; CSP blocks font CDNs), tree.svg (header watermark), app.js, htmx.min.js
 tests/            conftest.py, test_access.py, test_timing.py

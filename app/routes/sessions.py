@@ -3,7 +3,7 @@
 import re
 from datetime import date, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import RedirectResponse
 from starlette.datastructures import FormData
 
@@ -299,8 +299,36 @@ def restore_block(request: Request, block_id: int, coach: Coach = Depends(curren
 # --- groups --------------------------------------------------------------------------------
 
 
+@coach.get("/groups/{group_id}")
+def view_group(request: Request, group_id: int):
+    """The activity as it runs in this session: who, why today, focus points, then how to run it."""
+    with db() as conn:
+        group = _group_or_404(conn, group_id)
+        session = ses.get_session(conn, group["session_id"])
+        blocks = ses.load(conn, group["session_id"])
+        activity = acts.get(conn, group["activity_id"]) if group["activity_id"] else None
+        points = acts.points(conn, group["activity_id"]) if activity else {"coaching": [], "looks_like": []}
+    plan = layout([b["duration_min"] for b in blocks], session["start_time"])
+    order = []  # every group in running order, for previous / next
+    for block, timing in zip(blocks, plan["blocks"]):
+        for g in block["groups"]:
+            order.append({"group": g, "block": block, "timing": timing, "split": len(block["groups"]) > 1})
+    i = next(n for n, o in enumerate(order) if o["group"]["id"] == group_id)
+    here = order[i]
+    starred_ids = {f["point_id"] for f in here["group"]["focus"] if f["point_id"]}
+    return render(
+        request, "sessions/group.html",
+        session=session, here=here, g=here["group"], activity=activity,
+        type_label=acts.TYPES.get(activity["type"]) if activity else None,
+        other_points=[p for p in points["coaching"] if p["id"] not in starred_ids],
+        looks_like=points["looks_like"],
+        description=render_description(activity["description"]) if activity else [],
+        prev=order[i - 1] if i > 0 else None, next=order[i + 1] if i + 1 < len(order) else None,
+    )
+
+
 @coach.get("/groups/{group_id}/edit")
-def edit_group(request: Request, group_id: int, coach: Coach = Depends(current_coach)):
+def edit_group(request: Request, group_id: int, coach: Coach = Depends(current_coach), from_: str = Query("", alias="from")):
     with db() as conn:
         group = _group_or_404(conn, group_id)
         chosen = ses.group_coach_ids(conn, group_id)
@@ -315,6 +343,7 @@ def edit_group(request: Request, group_id: int, coach: Coach = Depends(current_c
         group=group, coaches=coaches, chosen=chosen, points=points, starred=starred,
         custom="\n".join(custom), is_split=siblings > 1, labels=labels,
         is_past=group["session_date"] <= today_london().isoformat(),
+        back_to_view=from_ == "view",
     )
 
 
@@ -335,6 +364,8 @@ def save_group(request: Request, group_id: int, form: FormData = Depends(form_da
         point_ids = [int(p) for p in form.getlist("point_id") if str(p).isdigit() and int(p) in valid_points]
         custom = [" ".join(line.split()) for line in str(form.get("custom_points") or "").splitlines() if line.strip()]
         ses.save_group(conn, group, values, coach_ids, point_ids, custom, coach.id)
+    if form.get("back") == "view":
+        return RedirectResponse(f"/groups/{group_id}", status_code=303)
     return _back(request, group["session_id"], group["block_id"])
 
 
