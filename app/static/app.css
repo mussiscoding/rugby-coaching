@@ -250,7 +250,8 @@ body:has(.arrange-box:checked) .arrange-label { background: var(--yellow); color
 .group { position: relative; }
 .group-name::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
 .group-edit, .group .badge, .group-remove { position: relative; z-index: 1; }
-.group { padding-right: 46px; }
+.group .lane-label, .group .group-kind { margin-right: 34px; }
+.group-kind { min-height: 18px; }
 .group-remove { position: absolute; top: 6px; right: 6px; }
 .group-remove button { min-height: 34px; min-width: 34px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 17px; border-radius: 50%; }
 .group-remove button:hover { background: var(--green-tint); color: var(--text); }
