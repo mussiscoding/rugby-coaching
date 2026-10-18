@@ -57,29 +57,11 @@
     <div class="chips chips-small">{% for t in tags %}<a class="chip" href="/activities?tag={{ t|urlencode }}">#{{ t }}</a>{% endfor %}</div>
   {% endif %}
 
-  <h2>Related activities</h2>
   {% if related %}
+    <h2>Related activities</h2>
     <ul class="related">
-      {% for r in related %}
-        <li>
-          <a href="/activities/{{ r.id }}">{{ r.name }}</a>
-          <form method="post" action="/activities/{{ activity.id }}/links/{{ r.id }}/remove" class="inline">
-            <button class="icon" aria-label="Remove link to {{ r.name }}">✕</button>
-          </form>
-        </li>
-      {% endfor %}
+      {% for r in related %}<li><a href="/activities/{{ r.id }}">{{ r.name }}</a> <span class="badge badge-{{ r.type }}">{{ types[r.type] }}</span></li>{% endfor %}
     </ul>
-  {% else %}
-    <p class="muted">None yet. Link a skill zone to the game zone that tests it.</p>
-  {% endif %}
-  {% if others %}
-    <form method="post" action="/activities/{{ activity.id }}/links" class="link-form">
-      <select name="other_id" aria-label="Activity to link" required>
-        <option value="">Link another activity…</option>
-        {% for o in others %}<option value="{{ o.id }}">{{ o.name }}</option>{% endfor %}
-      </select>
-      <button>Link</button>
-    </form>
   {% endif %}
 
   {% if usage.notes %}

@@ -48,6 +48,17 @@
       <label>Space <input type="text" name="space" value="{{ values.space }}" placeholder="e.g. 22 × 15m"></label>
     </div>
 
+    <fieldset class="checks">
+      <legend>Related activities <span class="hint">— e.g. the game zone that tests this skill</span></legend>
+      {% for r in linked %}
+        <label><input type="checkbox" name="related_id" value="{{ r.id }}" checked> {{ r.name }}</label>
+      {% endfor %}
+      <select name="add_related" aria-label="Link another activity">
+        <option value="">+ Link another activity…</option>
+        {% for o in addable %}<option value="{{ o.id }}">{{ o.name }}</option>{% endfor %}
+      </select>
+    </fieldset>
+
     <label>Tags
       <input type="text" name="tags" value="{{ values.tags }}" data-tag-input list="all-tags" placeholder="e.g. breakdown, attack" autocomplete="off">
       <datalist id="all-tags">{% for t in all_tags %}<option value="{{ t }}">{% endfor %}</datalist>

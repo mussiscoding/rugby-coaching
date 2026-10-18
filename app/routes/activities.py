@@ -46,11 +46,12 @@ def index(request: Request, q: str = "", type: str = "", tag: str = ""):
 def new_form(request: Request, session_id: int | None = None, coach: Coach = Depends(current_coach)):
     with db() as conn:
         tags = acts.all_tags(conn)
+        linked, addable = _related_choices(conn, None, set())
     values = {f: "" for f in acts.FIELDS} | {"type": "skill", "description": DESCRIPTION_TEMPLATE}
     return render(
         request, "activities/form.html",
         activity=None, values=values, point_rows={k: [] for k in acts.POINT_KINDS},
-        errors=[], all_tags=tags, types=acts.TYPES, used_in=0, session_id=session_id,
+        errors=[], all_tags=tags, types=acts.TYPES, used_in=0, session_id=session_id, linked=linked, addable=addable,
     )
 
 
@@ -59,8 +60,6 @@ def show(request: Request, activity_id: int, v: Viewer = Depends(require_coach))
     with db() as conn:
         activity = _load(conn, activity_id)
         related = acts.related(conn, activity_id)
-        related_ids = {r["id"] for r in related} | {activity_id}
-        others = [a for a in acts.search(conn) if a["id"] not in related_ids]
         context = dict(
             activity=activity,
             type_label=acts.TYPES[activity["type"]],
@@ -68,7 +67,7 @@ def show(request: Request, activity_id: int, v: Viewer = Depends(require_coach))
             description=render_description(activity["description"]),
             points=acts.points(conn, activity_id),
             related=related,
-            others=others,
+            types=acts.TYPES,
             usage=acts.usage(conn, activity_id),
             used_in=acts.sessions_using(conn, activity_id),
             locked_by=acts.lock_holder(activity, v.coach.id if v.coach else -1),
@@ -113,11 +112,35 @@ def _parse(form: FormData) -> tuple[dict, dict, list[str]]:
     return values, point_rows, errors
 
 
-def _form_again(request, conn, activity, values, point_rows, errors):
+def _related_choices(conn, activity_id: int | None, chosen: set[int]) -> tuple[list, list]:
+    """(currently linked, others you could add) for the edit form."""
+    everything = [a for a in acts.search(conn) if a["id"] != activity_id]
+    return [a for a in everything if a["id"] in chosen], [a for a in everything if a["id"] not in chosen]
+
+
+def _chosen_related(form: FormData) -> set[int]:
+    ids = {int(x) for x in form.getlist("related_id") if str(x).isdigit()}
+    extra = str(form.get("add_related") or "")
+    if extra.isdigit():
+        ids.add(int(extra))
+    return ids
+
+
+def _save_related(conn, activity_id: int, chosen: set[int]) -> None:
+    current = {r["id"] for r in acts.related(conn, activity_id)}
+    valid = {a["id"] for a in acts.search(conn)}
+    for other in (chosen & valid) - current:
+        acts.link(conn, activity_id, other)
+    for other in current - chosen:
+        acts.unlink(conn, activity_id, other)
+
+
+def _form_again(request, conn, activity, values, point_rows, errors, chosen=frozenset()):
     shown = {k: [{"id": pid, "text": t} for pid, t in rows] for k, rows in point_rows.items()}
+    linked, addable = _related_choices(conn, activity["id"] if activity else None, set(chosen))
     return render(
         request, "activities/form.html",
-        activity=activity, values=values, point_rows=shown, errors=errors,
+        activity=activity, values=values, point_rows=shown, errors=errors, linked=linked, addable=addable,
         all_tags=acts.all_tags(conn), types=acts.TYPES,
         used_in=acts.sessions_using(conn, activity["id"]) if activity else 0,
         session_id=values.get("session_id"),
@@ -131,8 +154,9 @@ def create(request: Request, form: FormData = Depends(form_data), coach: Coach =
         if errors:
             sid = str(form.get("session_id") or "")
             values["session_id"] = int(sid) if sid.isdigit() else None
-            return _form_again(request, conn, None, values, point_rows, errors)
+            return _form_again(request, conn, None, values, point_rows, errors, _chosen_related(form))
         activity_id = acts.create(conn, values, point_rows, coach.id)
+        _save_related(conn, activity_id, _chosen_related(form))
     session_id = str(form.get("session_id") or "")
     if session_id.isdigit():  # made from the + picker: go back to it (server-built URL, D-security)
         return RedirectResponse(f"/sessions/{int(session_id)}/add", status_code=303)
@@ -156,9 +180,10 @@ def edit_form(request: Request, activity_id: int, coach: Coach = Depends(current
             return _see(activity_id)
         values = {f: activity[f] if activity[f] is not None else "" for f in acts.FIELDS}
         point_rows = {k: [dict(r) for r in rows] for k, rows in acts.points(conn, activity_id).items()}
+        linked, addable = _related_choices(conn, activity_id, {r["id"] for r in acts.related(conn, activity_id)})
         return render(
             request, "activities/form.html",
-            activity=activity, values=values, point_rows=point_rows, errors=[],
+            activity=activity, values=values, point_rows=point_rows, errors=[], linked=linked, addable=addable,
             all_tags=acts.all_tags(conn), types=acts.TYPES,
             used_in=acts.sessions_using(conn, activity_id),
         )
@@ -169,12 +194,14 @@ def save(request: Request, activity_id: int, form: FormData = Depends(form_data)
     values, point_rows, errors = _parse(form)
     with db() as conn:
         activity = _load(conn, activity_id)
+        chosen = _chosen_related(form)
         if errors:
-            return _form_again(request, conn, activity, values, point_rows, errors)
+            return _form_again(request, conn, activity, values, point_rows, errors, chosen)
         taken_by = acts.update(conn, activity_id, values, point_rows, coach.id)
         if taken_by:
             message = f"Your edit lock ran out and {taken_by} is now editing this. Your version is below — copy what you need."
-            return _form_again(request, conn, activity, values, point_rows, [message])
+            return _form_again(request, conn, activity, values, point_rows, [message], chosen)
+        _save_related(conn, activity_id, chosen)
     return _see(activity_id)
 
 
@@ -201,21 +228,4 @@ def restore(activity_id: int, coach: Coach = Depends(current_coach)):
     with db() as conn:
         _load(conn, activity_id)
         acts.set_archived(conn, activity_id, False, coach.id)
-    return _see(activity_id)
-
-
-@coach.post("/activities/{activity_id}/links")
-def add_link(activity_id: int, form: FormData = Depends(form_data), coach: Coach = Depends(current_coach)):
-    other = str(form.get("other_id", ""))
-    with db() as conn:
-        _load(conn, activity_id)
-        if other.isdigit() and acts.get(conn, int(other)):
-            acts.link(conn, activity_id, int(other))
-    return _see(activity_id)
-
-
-@coach.post("/activities/{activity_id}/links/{other_id}/remove")
-def remove_link(activity_id: int, other_id: int, coach: Coach = Depends(current_coach)):
-    with db() as conn:
-        acts.unlink(conn, activity_id, other_id)
     return _see(activity_id)
