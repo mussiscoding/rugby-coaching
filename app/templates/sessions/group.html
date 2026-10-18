@@ -59,8 +59,17 @@
     </div>
   {% endif %}
 
+  {% if same_time %}
+    <div class="same-time">
+      <span class="run-label">Same time</span>
+      {% for x in same_time %}
+        <a href="/groups/{{ x.id }}" class="same-time-link"><span class="lane-label">{{ x.label or "Group" }}</span> {{ x.activity_name or x.title }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <nav class="run-nav">
-    {% if prev %}<a href="/groups/{{ prev.group.id }}" class="run-prev"><small>← {{ prev.timing.clock_start }}</small>{{ prev.group.activity_name or prev.group.title }}</a>{% else %}<span></span>{% endif %}
-    {% if next %}<a href="/groups/{{ next.group.id }}" class="run-next"><small>{{ next.timing.clock_start }} →</small>{{ next.group.activity_name or next.group.title }}</a>{% endif %}
+    {% if prev %}<a href="/groups/{{ prev.group.id }}" class="run-prev"><small>← Before · {{ prev.timing.clock_start }}</small>{% if prev.split %}<span class="nav-lane">{{ prev.group.label or "Split" }}</span>{% endif %}{{ prev.group.activity_name or prev.group.title }}</a>{% else %}<span></span>{% endif %}
+    {% if next %}<a href="/groups/{{ next.group.id }}" class="run-next"><small>Next · {{ next.timing.clock_start }} →</small>{% if next.split %}<span class="nav-lane">{{ next.group.label or "Split" }}</span>{% endif %}{{ next.group.activity_name or next.group.title }}</a>{% endif %}
   </nav>
 {% endblock %}

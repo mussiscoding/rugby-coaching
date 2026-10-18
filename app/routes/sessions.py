@@ -309,21 +309,29 @@ def view_group(request: Request, group_id: int):
         activity = acts.get(conn, group["activity_id"]) if group["activity_id"] else None
         points = acts.points(conn, group["activity_id"]) if activity else {"coaching": [], "looks_like": []}
     plan = layout([b["duration_min"] for b in blocks], session["start_time"])
-    order = []  # every group in running order, for previous / next
-    for block, timing in zip(blocks, plan["blocks"]):
-        for g in block["groups"]:
-            order.append({"group": g, "block": block, "timing": timing, "split": len(block["groups"]) > 1})
-    i = next(n for n, o in enumerate(order) if o["group"]["id"] == group_id)
-    here = order[i]
-    starred_ids = {f["point_id"] for f in here["group"]["focus"] if f["point_id"]}
+    slots = [{"block": b, "timing": t} for b, t in zip(blocks, plan["blocks"])]
+    i = next(n for n, slot in enumerate(slots) if any(g["id"] == group_id for g in slot["block"]["groups"]))
+    here = slots[i] | {"split": len(slots[i]["block"]["groups"]) > 1}
+    g = next(x for x in here["block"]["groups"] if x["id"] == group_id)
+
+    def landing(slot):
+        """Previous/next go by time slot; in a split, land on the group with the same name."""
+        if slot is None:
+            return None
+        groups = slot["block"]["groups"]
+        same = [x for x in groups if g["label"] and x["label"].lower() == g["label"].lower()]
+        return slot | {"group": (same or groups)[0], "split": len(groups) > 1}
+
+    starred_ids = {f["point_id"] for f in g["focus"] if f["point_id"]}
     return render(
         request, "sessions/group.html",
-        session=session, here=here, g=here["group"], activity=activity,
+        session=session, here=here, g=g, activity=activity,
+        same_time=[x for x in here["block"]["groups"] if x["id"] != group_id],
         type_label=acts.TYPES.get(activity["type"]) if activity else None,
         other_points=[p for p in points["coaching"] if p["id"] not in starred_ids],
         looks_like=points["looks_like"],
         description=render_description(activity["description"]) if activity else [],
-        prev=order[i - 1] if i > 0 else None, next=order[i + 1] if i + 1 < len(order) else None,
+        prev=landing(slots[i - 1] if i > 0 else None), next=landing(slots[i + 1] if i + 1 < len(slots) else None),
     )
 
 

@@ -275,3 +275,7 @@ h2.quiet { font-size: 16px; color: var(--muted); }
 .run-nav a { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; background: var(--surface); border-radius: var(--radius); text-decoration: none; color: var(--text); font: 700 17px/1.15 var(--head); box-shadow: 0 2px 8px rgba(43,58,30,.08); }
 .run-nav small { font: 600 13px var(--head); color: var(--green); letter-spacing: .06em; }
 .run-next { text-align: right; grid-column: 2; }
+.same-time { display: flex; flex-direction: column; gap: 8px; margin: 18px 0 0; }
+.same-time-link { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--surface); border-radius: var(--radius); border: 2px dashed #cfd6c2; text-decoration: none; color: var(--text); font: 700 17px var(--head); }
+.same-time-link .lane-label { margin: 0; }
+.nav-lane { font: 700 12px var(--head); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }

@@ -10,10 +10,14 @@
       <label>What is it? <input type="text" name="title" value="{{ group.title }}"></label>
     {% endif %}
 
-    <label>Group name {% if not is_split %}<span class="muted">— only shown once this block is split</span>{% endif %}
-      <input type="text" name="label" value="{{ group.label }}" list="labels" placeholder="e.g. Forwards, Backs, Station 2">
-      <datalist id="labels">{% for l in labels %}<option value="{{ l }}">{% endfor %}</datalist>
-    </label>
+    {% if is_split %}
+      <label>Group name
+        <input type="text" name="label" value="{{ group.label }}" list="labels" placeholder="e.g. Forwards, Backs, Station 2">
+        <datalist id="labels">{% for l in labels %}<option value="{{ l }}">{% endfor %}</datalist>
+      </label>
+    {% else %}
+      <input type="hidden" name="label" value="{{ group.label }}">
+    {% endif %}
 
     <fieldset class="checks">
       <legend>Who's running it</legend>
