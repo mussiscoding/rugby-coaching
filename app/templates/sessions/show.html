@@ -4,24 +4,23 @@
 <div {% if scroll_to %}data-scroll-to="{{ scroll_to }}"{% endif %}>
   <header class="session-hero">
     <p class="back"><a href="/">← Sessions</a></p>
-    <div class="hero-row">
+    <a class="hero-row" href="/sessions/{{ session.id }}/edit?focus=date" aria-label="Edit date and time">
       <div class="hero-date"><span>{{ session.date|day_short }}</span><b>{{ session.date|day_num }}</b><span>{{ session.date|month_short }}</span></div>
       <div>
         <div class="hero-title">Training</div>
-        <div class="hero-sub">{{ session.start_time }} → {{ plan.end }} · {{ plan.total }} min</div>
+        <div class="hero-sub">{{ session.start_time }} → {{ plan.end }} · {{ plan.total }} min <span class="pencil">✎</span></div>
       </div>
-    </div>
+    </a>
     <div class="hero-links">
-      <a href="/sessions/{{ session.id }}/edit">Edit details</a>
       {% if blocks %}<label for="arrange" class="arrange-label"><span class="off">Rearrange</span><span class="on">Done</span></label>{% endif %}
     </div>
   </header>
 
-  <div class="goal">
-    <span class="goal-label">GOAL</span>
+  <a class="goal goal-link" href="/sessions/{{ session.id }}/edit?focus=goal" aria-label="Edit the goal">
+    <span class="goal-label">GOAL <span class="pencil">✎</span></span>
     {% if session.goal %}<p>{{ session.goal }}</p>
-    {% else %}<p class="muted"><a href="/sessions/{{ session.id }}/edit">Add a goal</a> — every block should link back to it.</p>{% endif %}
-  </div>
+    {% else %}<p class="muted">+ Add a goal — every block should link back to it.</p>{% endif %}
+  </a>
 
   {% if session.archived_at %}
     <div class="banner warn">This session was deleted.
@@ -31,7 +30,6 @@
     <div class="toast" role="status">{{ "Block" if undo[0] == "blocks" else "Group" }} removed.
       <form method="post" action="/{{ 'blocks' if undo[0] == 'blocks' else 'groups' }}/{{ undo[1] }}/restore" class="inline"><button>Undo</button></form></div>
   {% endif %}
-  {% if is_past and session.notes %}<p class="session-notes">Session notes: {{ session.notes }}</p>{% endif %}
 
   {% macro group_card(g, split, index) %}
     <div class="group type-{{ g.activity_type or 'other' }}">
@@ -86,6 +84,11 @@
       <div class="empty"><p><strong>Nothing planned yet.</strong></p><p class="muted">Tap “Add block” to pick the first activity.</p></div>
     {% endif %}
   </div>
+
+  <a class="notes-link" href="/sessions/{{ session.id }}/edit?focus=notes">
+    {% if session.notes %}<span class="goal-label">SESSION NOTES <span class="pencil">✎</span></span><p>{{ session.notes }}</p>
+    {% else %}+ Add session notes{% endif %}
+  </a>
 
   <a class="fab" href="/sessions/{{ session.id }}/add">+ Add block</a>
 

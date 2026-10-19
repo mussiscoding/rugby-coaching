@@ -5,16 +5,16 @@
   {% if errors %}<div class="banner warn">{% for e in errors %}<p>{{ e }}</p>{% endfor %}</div>{% endif %}
   <form method="post" action="{{ '/sessions/%d' % session.id if session else '/sessions' }}" class="form">
     <div class="grid-2">
-      <label>Date <input type="date" name="date" value="{{ values.date }}" required></label>
+      <label>Date <input type="date" name="date" value="{{ values.date }}" required {% if focus == "date" %}autofocus{% endif %}></label>
       <label>Start time <input type="time" name="start_time" value="{{ values.start_time }}" required></label>
     </div>
     <label>Goal for the session
       <span class="hint">Everything in the plan links back to this.</span>
-      <textarea name="goal" rows="3" placeholder="e.g. Win the breakdown: low body height and fast second arrival">{{ values.goal }}</textarea>
+      <textarea name="goal" rows="3" {% if focus == "goal" %}autofocus{% endif %} placeholder="e.g. Win the breakdown: low body height and fast second arrival">{{ values.goal }}</textarea>
     </label>
     {% if session %}
       <label>Session notes <span class="muted">— coaches only: turnout, how it went overall</span>
-        <textarea name="notes" rows="3">{{ values.notes }}</textarea>
+        <textarea name="notes" rows="3" {% if focus == "notes" %}autofocus{% endif %}>{{ values.notes }}</textarea>
       </label>
     {% endif %}
     <div class="actions"><button class="primary">{{ "Save" if session else "Create blank session" }}</button></div>

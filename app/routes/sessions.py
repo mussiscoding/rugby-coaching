@@ -133,10 +133,10 @@ def show_session(request: Request, session_id: int):
 
 
 @coach.get("/sessions/{session_id}/edit")
-def edit_session(request: Request, session_id: int, coach: Coach = Depends(current_coach)):
+def edit_session(request: Request, session_id: int, focus: str = "", coach: Coach = Depends(current_coach)):
     with db() as conn:
         session = _session_or_404(conn, session_id)
-    return render(request, "sessions/form.html", session=session, values=dict(session), errors=[])
+    return render(request, "sessions/form.html", session=session, values=dict(session), errors=[], focus=focus)
 
 
 @coach.post("/sessions/{session_id}")
