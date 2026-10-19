@@ -118,6 +118,33 @@ Groups of three.
         "Too far forward and we can't get low enough", "Too far back and we have no power"],
        ["Flat backs, hips below shoulders", "The ball stays on the attack's side"]),  # [guess] what good looks like
 
+    ("activate", dict(
+        name="Activate warm-up", type="warmup", default_duration_min=15,  # [guess] minutes
+        players="Any", coaches_needed=1, space="10m × 1m per player",
+        summary="England Rugby's Activate injury-prevention warm-up: movement, balance and speed build-up.",
+        tags="warm-up,injury prevention,speed",
+        description="""## How to run
+- S-shaped runs
+- Slow knees to chest
+- Hops
+- Leg swings
+- Lunge with a twist
+- Lunge with a lean
+- Fast feet → 70% sprint
+- Fast feet → 90% sprint
+""",
+        # Coaching points are from England Rugby's "Key Activate" cues.
+    ), ["Knee over toes", "Hip, knee, ankle in line", "Chest up, head neutral", "Brace through the trunk", "Soft knees on landing"],
+       ["Quality movement every rep, not rushing", "Knees tracking over toes on lunges and hops"]),  # [guess] what good looks like
+
+    # Placeholders John wants in the library; to be filled in.
+    ("backline-depth", dict(name="Backline depth", type="skill"), [], []),
+    ("backline-shape", dict(name="Backline set shape (alignment)", type="skill"), [], []),
+    ("blitz-defence", dict(name="Blitz defence", type="skill"), [], []),
+    ("lineout-mauls", dict(name="Lineout mauls", type="skill"), [], []),
+    ("scrum-shape", dict(name="Scrum shape", type="skill"), [], []),
+    ("team-run", dict(name="Team run-through", type="game"), [], []),
+
     # --- Claude's original starters: still to review (keep / change / drop). ---
     # --- Warm-ups -------------------------------------------------------------
     ("touch", dict(
@@ -417,6 +444,7 @@ RELATED = [
     # From John
     ("overlaps", "guards-bodyguards"), ("ruck-body-position", "come-ruck-123"),
     ("lineout-in-front", "lineout"), ("lineout-in-front", "set-piece-phase"),  # "all other lineout and throwing" ones
+    ("lineout-in-front", "lineout-mauls"), ("lineout", "lineout-mauls"),
     # Claude's starters (to review)
     ("overlaps", "numbers-up"), ("ruck-clear", "ruck-game"), ("presentation", "ruck-game"),
     ("tackle", "defence-game"), ("line-speed", "defence-game"), ("passing-move", "guards-bodyguards"),
