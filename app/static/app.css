@@ -229,7 +229,7 @@ input:focus, textarea:focus, select:focus { outline: 3px solid rgba(247,199,65,.
 .how { margin: 6px 0 0; font-size: 15px; color: var(--muted); font-style: italic; }
 .group-edit { display: inline-block; margin-top: 6px; font-size: 14px; font-weight: 600; }
 .block-tools { display: none; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
-/* "Change times & order" switch: a plain checkbox, so it works without JS; app.js remembers it per session. */
+/* "Rearrange" switch: a plain checkbox, so it works without JS; app.js remembers it per session. */
 .arrange-box { position: absolute; opacity: 0; pointer-events: none; }
 .arrange-box:checked ~ .timeline .block-tools { display: flex; }
 .arrange-label { color: var(--yellow); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
