@@ -62,7 +62,7 @@
       {% set n = block.groups|length %}
       <section class="slot" id="block-{{ block.id }}">
         <div class="when"><b>{{ block.timing.clock_start }}</b><span>{{ block.duration_min }} min</span></div>
-        <div class="rail"></div>
+        <div class="rail"><a class="rail-plus" href="/sessions/{{ session.id }}/add?block_id={{ block.id }}" aria-label="Split: add a group alongside" title="Add a group alongside">+</a></div>
         <div class="block-body {{ 'lanes-2' if n == 2 else ('lanes-many' if n > 2 else '') }}">
           {% if n > 1 %}<div class="split-head">Split · {{ n }} groups at once · {{ block.timing.rel_start }}–{{ block.timing.rel_end }}</div>{% endif %}
           {% if block.clash_names %}<p class="clash">⚠ {{ block.clash_names|join(" and ") }} {{ "is" if block.clash_names|length == 1 else "are" }} in two places at once</p>{% endif %}
@@ -78,7 +78,6 @@
             <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="up"><button class="icon" aria-label="Move up" {% if loop.first %}disabled{% endif %}>↑</button></form>
             <form method="post" action="/blocks/{{ block.id }}/move" class="inline"><input type="hidden" name="dir" value="down"><button class="icon" aria-label="Move down" {% if loop.last %}disabled{% endif %}>↓</button></form>
           </div>
-          <a class="split-link" href="/sessions/{{ session.id }}/add?block_id={{ block.id }}">+ Split: add a group alongside</a>
         </div>
       </section>
     {% endfor %}

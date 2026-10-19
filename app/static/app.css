@@ -257,7 +257,13 @@ body:has(.arrange-box:checked) .arrange-label { background: var(--yellow); color
 .group-remove { position: absolute; top: 6px; right: 6px; }
 .group-remove button { min-height: 34px; min-width: 34px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 17px; border-radius: 50%; }
 .group-remove button:hover { background: var(--green-tint); color: var(--text); }
-.split-link { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600; }
+.rail-plus {
+  position: absolute; left: -2px; bottom: 6px; z-index: 1; width: 27px; height: 27px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; text-decoration: none;
+  background: var(--cream); border: 2px solid var(--green); color: var(--green); font: 700 19px/1 var(--body);
+}
+.rail-plus:hover, .rail-plus:active { background: var(--yellow); color: var(--green-deep); }
+.rail-plus::after { content: ""; position: absolute; inset: -9px; }  /* bigger tap area */
 .group:active { transform: scale(.99); }
 
 /* --- a group as it runs in a session (plan + activity together) --- */
