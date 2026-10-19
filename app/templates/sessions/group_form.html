@@ -26,7 +26,7 @@
       {% endfor %}
     </fieldset>
 
-    <label>Why today <span class="muted">— how this serves the session goal</span>
+    <label>Why today <span class="muted">How this serves the session goal</span>
       <textarea name="why_today" rows="2">{{ group.why_today }}</textarea>
     </label>
 
@@ -38,12 +38,12 @@
         {% endfor %}
       </fieldset>
     {% endif %}
-    <label>{{ "Any others for today" if points else "Coaching points for today" }} <span class="muted">— one per line</span>
+    <label>{{ "Any others for today" if points else "Coaching points for today" }} <span class="muted">One per line</span>
       <textarea name="custom_points" rows="2">{{ custom }}</textarea>
     </label>
 
     {% if is_past %}
-      <label>How it went <span class="muted">— shows on the activity's card for next time</span>
+      <label>How it went <span class="muted">Shows on the activity's card for next time</span>
         <textarea name="how_it_went" rows="3">{{ group.how_it_went }}</textarea>
       </label>
     {% else %}

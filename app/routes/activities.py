@@ -199,7 +199,7 @@ def save(request: Request, activity_id: int, form: FormData = Depends(form_data)
             return _form_again(request, conn, activity, values, point_rows, errors, chosen)
         taken_by = acts.update(conn, activity_id, values, point_rows, coach.id)
         if taken_by:
-            message = f"Your edit lock ran out and {taken_by} is now editing this. Your version is below — copy what you need."
+            message = f"Your edit lock ran out and {taken_by} is now editing this. Your version is below, so copy what you need."
             return _form_again(request, conn, activity, values, point_rows, [message], chosen)
         _save_related(conn, activity_id, chosen)
     return _see(activity_id)

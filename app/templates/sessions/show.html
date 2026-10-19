@@ -23,7 +23,7 @@
   <a class="goal goal-link" href="/sessions/{{ session.id }}/edit?focus=goal" aria-label="Edit the goal">
     <span class="goal-label">GOAL <span class="pencil">✎</span></span>
     {% if session.goal %}<p>{{ session.goal }}</p>
-    {% else %}<p class="muted">+ Add a goal — every block should link back to it.</p>{% endif %}
+    {% else %}<p class="muted">+ Add a goal. Every block should link back to it.</p>{% endif %}
   </a>
 
   {% if session.archived_at %}

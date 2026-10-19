@@ -13,7 +13,7 @@
       <textarea name="goal" rows="3" {% if focus == "goal" %}autofocus{% endif %} placeholder="e.g. Win the breakdown: low body height and fast second arrival">{{ values.goal }}</textarea>
     </label>
     {% if session %}
-      <label>Session notes <span class="muted">— coaches only: turnout, how it went overall</span>
+      <label>Session notes <span class="muted">Coaches only: turnout and how it went overall</span>
         <textarea name="notes" rows="3" {% if focus == "notes" %}autofocus{% endif %}>{{ values.notes }}</textarea>
       </label>
     {% endif %}

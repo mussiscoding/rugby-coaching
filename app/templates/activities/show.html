@@ -68,7 +68,7 @@
     <h2>From previous sessions</h2>
     <ul class="notes">
       {% for n in usage.notes %}
-        <li><a href="/sessions/{{ n.session_id }}">{{ n.date|nice_date }}</a>{% if n.coaches %} — {{ n.coaches }}{% endif %}: {{ n.how_it_went }}</li>
+        <li><a href="/sessions/{{ n.session_id }}">{{ n.date|nice_date }}</a>{% if n.coaches %} ({{ n.coaches }}){% endif %}: {{ n.how_it_went }}</li>
       {% endfor %}
     </ul>
   {% endif %}

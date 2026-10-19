@@ -4,7 +4,7 @@
 {% block main %}
   {% if preview %}
     <div class="banner warn">
-      <span>Player view preview — {{ "players can see this" if shared else "not shared with players yet" }}.</span>
+      <span>Player view preview: {{ "players can see this" if shared else "not shared with players yet" }}.</span>
       <a href="/sessions/{{ s.id }}">Back to the plan</a>
     </div>
   {% endif %}
@@ -19,10 +19,12 @@
     </div>
   </header>
 
-  <div class="goal">
-    <span class="goal-label">GOAL</span>
-    <p>{{ s.goal or "—" }}</p>
-  </div>
+  {% if s.goal %}
+    <div class="goal">
+      <span class="goal-label">GOAL</span>
+      <p>{{ s.goal }}</p>
+    </div>
+  {% endif %}
 
   <div class="timeline">
     {% for b in s.blocks %}

@@ -164,7 +164,7 @@ On being touched, the player places the ball between their legs ("chicken scratc
 - Only offloads allowed after a touch
 - Player touched goes to ground, and one supporting player "rucks"
 """,
-    ), ["Run onto the ball, don't wait for it", "Talk early: call for it", "Width — use the whole pitch"],
+    ), ["Run onto the ball, don't wait for it", "Talk early: call for it", "Width: use the whole pitch"],
        ["Constant talking", "Ball moving wide, not just one-out runners"]),
 
     ("movement", dict(
@@ -209,7 +209,7 @@ Build intensity in stages: shoulder taps, hand wrestles for position, walking hi
 ## Progressions
 - Add a ball carrier who has to protect the ball through light contact
 """,
-    ), ["Cheek to cheek — head to the side", "Feet keep driving after contact", "Build up gradually, never jump straight to full speed"],
+    ), ["Cheek to cheek: head to the side", "Feet keep driving after contact", "Build up gradually, never jump straight to full speed"],
        ["Safe head position every time", "Players ready to move into full contact work"]),
 
     # --- Skill zones -------------------------------------------------------------
