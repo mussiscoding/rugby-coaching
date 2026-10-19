@@ -35,6 +35,7 @@ app/
   auth.py         secret links → cookie, require_viewer/require_coach/current_coach, csrf_check
   templating.py   Jinja setup, render(), asset_version(), when/nice_date filters
   activities.py   activity library queries: search, points, links, usage, 2-hour edit lock
+  player.py       player_projection(): the allowlist of what players see (security boundary)
   sessions.py     session queries: blocks, groups (splits), coaches, focus points, moves, archive
   seed_activities.py  starter activities, inserted only into an empty library
   text.py         description → headings/paragraphs/bullets; tag + video URL helpers
@@ -42,7 +43,7 @@ app/
   routes/         access.py (join, who, healthz), home.py, activities.py, sessions.py (plan, + picker, blocks, groups, /groups/<id> run view)
   templates/      base.html + pages
   static/         app.css (club look), fonts.css + fonts/ (self-hosted Barlow; CSP blocks font CDNs), crest-watermark.png (club crest, tinted, header watermark), app.js, htmx.min.js
-tests/            conftest.py, test_access.py, test_timing.py
+tests/            conftest.py, test_access.py, test_timing.py, test_player_view.py (marker-string redaction)
 deploy/           systemd unit, Caddy snippet, backup timer, deploy.sh
 docs/             brainstorms/, plans/, decisions.md, setup.md, jots/
 ```

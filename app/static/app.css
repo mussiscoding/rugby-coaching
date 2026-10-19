@@ -318,3 +318,8 @@ a.goal-link { display: block; color: var(--text); text-decoration: none; }
 .notes-link { display: block; margin: 14px 0 0 76px; padding: 12px 14px; border-radius: var(--radius); text-decoration: none; font-weight: 600; color: var(--green); border: 2px dashed #cfd6c2; }
 .notes-link p { margin: 4px 0 0; color: var(--text); font-weight: 400; }
 .notes-link:has(p) { border-style: solid; border-color: var(--line); background: var(--surface); }
+
+/* Share with players switch in the session header */
+.hero-links { align-items: center; }
+.share-toggle { min-height: 32px; padding: 3px 12px; border-radius: 999px; border: 2px solid var(--yellow); background: transparent; color: var(--yellow); font: 700 15px var(--head); text-transform: uppercase; letter-spacing: .04em; }
+.share-toggle.is-on { background: var(--yellow); color: var(--green-deep); }

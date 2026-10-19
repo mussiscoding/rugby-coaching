@@ -1,0 +1,51 @@
+{# Player view. Receives ONLY `s` from player_projection() — never the coach's session tree. #}
+{% extends "base.html" %}
+{% block title %}Training {{ s.date|nice_date }} · {{ app_name }}{% endblock %}
+{% block main %}
+  {% if preview %}
+    <div class="banner warn">
+      <span>Player view preview — {{ "players can see this" if shared else "not shared with players yet" }}.</span>
+      <a href="/sessions/{{ s.id }}">Back to the plan</a>
+    </div>
+  {% endif %}
+  <header class="session-hero">
+    {% if not preview %}<p class="back"><a href="/">← Training</a></p>{% endif %}
+    <div class="hero-row">
+      <div class="hero-date"><span>{{ s.date|day_short }}</span><b>{{ s.date|day_num }}</b><span>{{ s.date|month_short }}</span></div>
+      <div>
+        <div class="hero-title">Training</div>
+        <div class="hero-sub">{{ s.start_time }} → {{ s.end }} · {{ s.total }} min</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="goal">
+    <span class="goal-label">GOAL</span>
+    <p>{{ s.goal or "—" }}</p>
+  </div>
+
+  <div class="timeline">
+    {% for b in s.blocks %}
+      <section class="slot">
+        <div class="when"><b>{{ b.clock_start }}</b><span>{{ b.minutes }} min</span></div>
+        <div class="rail"></div>
+        <div class="block-body {{ 'lanes-2' if b.groups|length == 2 else ('lanes-many' if b.groups|length > 2 else '') }}">
+          {% if b.split %}<div class="split-head">{{ b.groups|length }} groups at once</div>{% endif %}
+          <div class="groups">
+            {% for g in b.groups %}
+              <div class="group type-{{ g.type or 'other' }}">
+                {% if b.split %}<span class="lane-label">{{ g.label or "Group " ~ loop.index }}</span>
+                {% elif g.type %}<div class="group-kind"><span>{{ types[g.type] }}</span></div>{% endif %}
+                <span class="group-name">{{ g.name }}</span>
+                {% if g.why %}<p class="why">↳ {{ g.why }}</p>{% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+    {% if s.blocks %}
+      <div class="slot finish"><div class="when"><b>{{ s.end }}</b></div><div class="rail"></div><div class="finish-label">Finish</div></div>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -9,10 +9,11 @@ from starlette.datastructures import FormData
 
 from app import activities as acts
 from app import sessions as ses
-from app.auth import Coach, csrf_check, current_coach, require_coach
+from app.auth import Coach, Viewer, csrf_check, current_coach, require_coach, require_viewer
 from app.config import settings
-from app.db import active_coaches, db
+from app.db import active_coaches, db, tx
 from app.routes.activities import form_data
+from app.player import player_projection, visible_to_players
 from app.text import render_description
 from app.timing import double_booked, layout, today_london
 from app.templating import render
@@ -113,11 +114,22 @@ def create_session(request: Request, form: FormData = Depends(form_data), coach:
     return RedirectResponse(f"/sessions/{session_id}", status_code=303)
 
 
-@coach.get("/sessions/{session_id}")
-def show_session(request: Request, session_id: int):
+# Player allowlist: GET /sessions/{id} is the one session page players can open.
+viewer = APIRouter(dependencies=[Depends(require_viewer)])
+
+
+@viewer.get("/sessions/{session_id}")
+def show_session(request: Request, session_id: int, v: Viewer = Depends(require_viewer), as_: str = Query("", alias="as")):
     with db() as conn:
-        session = _session_or_404(conn, session_id)
+        session = ses.get_session(conn, session_id)
+        if not v.is_coach and not visible_to_players(session):
+            raise HTTPException(404)  # unshared, past or deleted: players can't tell it exists
+        if session is None:
+            raise HTTPException(404)
         blocks = ses.load(conn, session_id)
+    if not v.is_coach or as_ == "player":
+        return render(request, "sessions/player.html", s=player_projection(session, blocks),
+                      types=acts.TYPES, preview=v.is_coach, shared=bool(session["shared_with_players"]))
     plan = layout([b["duration_min"] for b in blocks], session["start_time"])
     for block, timing in zip(blocks, plan["blocks"]):
         block["timing"] = timing
@@ -130,6 +142,17 @@ def show_session(request: Request, session_id: int):
         scroll_to=request.session.pop("scroll_to", None),
         undo=request.session.pop("undo", None),
     )
+
+
+@coach.post("/sessions/{session_id}/share")
+def toggle_share(session_id: int, coach: Coach = Depends(current_coach)):
+    with db() as conn:
+        session = _session_or_404(conn, session_id)
+        with tx(conn):
+            conn.execute("UPDATE sessions SET shared_with_players = ? WHERE id = ?",
+                         (0 if session["shared_with_players"] else 1, session_id))
+            ses.touch(conn, session_id, coach.id)
+    return RedirectResponse(f"/sessions/{session_id}", status_code=303)
 
 
 @coach.get("/sessions/{session_id}/edit")

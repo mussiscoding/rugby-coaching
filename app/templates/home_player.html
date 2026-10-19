@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 {% block main %}
   <h1>Training</h1>
-  <div class="empty">
-    <p>No session shared yet — check WhatsApp.</p>
-  </div>
+  {% if sessions %}
+    <ul class="cards">
+      {% for s in sessions %}
+        <li>
+          <a class="card-link session-link" href="/sessions/{{ s.id }}">
+            <span class="datetile"><span>{{ s.date|day_short }}</span><b>{{ s.date|day_num }}</b><span>{{ s.date|month_short }}</span></span>
+            <span class="card-title">{{ s.goal or "Training" }}</span>
+            <span class="card-summary">{{ s.start_time }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty"><p>No session shared yet — check WhatsApp.</p></div>
+  {% endif %}
 {% endblock %}

@@ -416,8 +416,8 @@ GET  /healthz
 
 ### Phase 5: Player view
 
-- [ ] `player_projection()`, `sessions/player.html`, player home (D14), share toggle (D2), "View as player" (`?as=player`)
-- [ ] **Test** in `tests/test_player_view.py`: **marker-string redaction**. Every field gets a unique marker (`ZZ_COACHPOINT_1`, coach names and so on). Assert that **none** appear anywhere in the player HTML, including attributes and `/activities/` hrefs, and that an unshared session gives 404.
+- [x] `player_projection()`, `sessions/player.html`, player home (D14), share toggle (D2), "View as player" (`?as=player`)
+- [x] **Test** in `tests/test_player_view.py`: **marker-string redaction**. Every field gets a unique marker (`ZZ_COACHPOINT_1`, coach names and so on). Assert that **none** appear anywhere in the player HTML, including attributes and `/activities/` hrefs, and that an unshared session gives 404.
 
 ### Phase 6: Launch
 

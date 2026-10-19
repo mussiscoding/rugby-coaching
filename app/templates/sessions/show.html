@@ -12,6 +12,10 @@
       </div>
     </a>
     <div class="hero-links">
+      <form method="post" action="/sessions/{{ session.id }}/share" class="inline">
+        <button class="share-toggle{{ ' is-on' if session.shared_with_players }}">{{ "✓ Shared with players" if session.shared_with_players else "Share with players" }}</button>
+      </form>
+      <a href="/sessions/{{ session.id }}?as=player">View as player</a>
       {% if blocks %}<label for="arrange" class="arrange-label"><span class="off">Rearrange</span><span class="on">Done</span></label>{% endif %}
     </div>
   </header>
