@@ -257,13 +257,18 @@ body:has(.arrange-box:checked) .arrange-label { background: var(--yellow); color
 .group-remove { position: absolute; top: 6px; right: 6px; }
 .group-remove button { min-height: 34px; min-width: 34px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 17px; border-radius: 50%; }
 .group-remove button:hover { background: var(--green-tint); color: var(--text); }
-.rail-plus {
-  position: absolute; left: -2px; bottom: 6px; z-index: 1; width: 27px; height: 27px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; text-decoration: none;
-  background: var(--cream); border: 2px solid var(--green); color: var(--green); font: 700 19px/1 var(--body);
+/* Split button on the rail: same size and centre line as the time dots, halfway down the block.
+   The <a> is a 33px invisible tap target; ::before draws the 17px circle with a CSS plus. */
+.rail-plus { position: absolute; left: -5px; top: 50%; z-index: 1; width: 33px; height: 33px; transform: translateY(-50%); }
+.rail-plus::before {
+  content: ""; position: absolute; left: 8px; top: 8px; width: 17px; height: 17px; box-sizing: border-box;
+  border-radius: 50%; border: 2px solid var(--green);
+  background:
+    linear-gradient(var(--green), var(--green)) center / 7px 2px no-repeat,
+    linear-gradient(var(--green), var(--green)) center / 2px 7px no-repeat,
+    var(--cream);
 }
-.rail-plus:hover, .rail-plus:active { background: var(--yellow); color: var(--green-deep); }
-.rail-plus::after { content: ""; position: absolute; inset: -9px; }  /* bigger tap area */
+.rail-plus:hover::before, .rail-plus:active::before { background-color: var(--yellow); }
 .group:active { transform: scale(.99); }
 
 /* --- a group as it runs in a session (plan + activity together) --- */
