@@ -144,6 +144,7 @@ Groups of three.
     ("lineout-mauls", dict(name="Lineout mauls", type="skill"), [], []),
     ("scrum-shape", dict(name="Scrum shape", type="skill"), [], []),
     ("team-run", dict(name="Team run-through", type="game"), [], []),
+    ("gameplay-scenarios", dict(name="Gameplay scenarios & decision-making", type="game"), [], []),
 
     # --- Claude's original starters: still to review (keep / change / drop). ---
     # --- Warm-ups -------------------------------------------------------------
@@ -402,6 +403,7 @@ RELATED = [
     ("overlaps", "guards-bodyguards"), ("ruck-body-position", "come-ruck-123"),
     ("lineout-in-front", "lineout"), ("lineout-in-front", "set-piece-phase"),  # "all other lineout and throwing" ones
     ("lineout-in-front", "lineout-mauls"), ("lineout", "lineout-mauls"),
+    ("gameplay-scenarios", "team-run"),
     # Claude's starters (to review)
     ("overlaps", "numbers-up"), ("ruck-clear", "come-ruck-123"),
     ("line-speed", "blitz-defence"), ("passing-move", "guards-bodyguards"),
