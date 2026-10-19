@@ -148,7 +148,7 @@ Groups of three.
     # --- Claude's original starters: still to review (keep / change / drop). ---
     # --- Warm-ups -------------------------------------------------------------
     ("touch", dict(
-        name="Touch warm-up", type="warmup", default_duration_min=15,
+        name="Rugby league touch", type="warmup", default_duration_min=15,
         players="10–30", coaches_needed=1, space="Half pitch",
         summary="Easy-paced touch to get bodies moving and hands on the ball.",
         tags="warm-up,handling,communication",
@@ -156,12 +156,12 @@ Groups of three.
 Two even teams, bibs, one ball. Touch = tackle; six touches then turnover.
 
 ## How to run
-Start at walking pace for two minutes, then build to a jog, then game speed for the last few minutes. Coach stops it only for safety or a quick reset.
+On being touched, the player places the ball between their legs ("chicken scratch") and someone plays 9.
 
 ## Progressions
-- Ball carrier must pass within two seconds of a touch
+- Guards and bodyguards for the defending team
 - Only offloads allowed after a touch
-- Add a second ball
+- Player touched goes to ground, and one supporting player "rucks"
 """,
     ), ["Run onto the ball, don't wait for it", "Talk early: call for it", "Width — use the whole pitch"],
        ["Constant talking", "Ball moving wide, not just one-out runners"]),
@@ -180,21 +180,16 @@ Each drill out and back: jog, high knees, heel flicks, walking lunges with twist
     ), ["Quality over speed until the sprints", "Stay tall on the running drills", "Full range of movement"],
        ["Everyone warm and slightly out of breath", "No one skipping the last sprint"]),
 
-    ("handling-lines", dict(
-        name="Handling lines", type="warmup", default_duration_min=10,
-        players="8–30", coaches_needed=1, space="20 × 20m",
-        summary="Lines passing on the move to wake up hands before skills work.",
+    ("endless-passing", dict(
+        name="Endless passing", type="warmup", default_duration_min=5,
+        players="9–30", coaches_needed=1, space="10 × 15m",
+        summary="Three lines passing continuously to wake up hands before skills work.",
         tags="warm-up,handling,passing",
         description="""## Set up
-Groups of four in a line, one ball each group, jogging up a 20m channel.
+Three lines.
 
 ## How to run
-Pass along the line while jogging; the end player carries the ball back. Swap direction each length so both hands work.
-
-## Progressions
-- Increase speed
-- Pass must be caught with hands out in front
-- Call a name: that player has to come round for a loop
+Pass continually: end → middle → end → middle…
 """,
     ), ["Hands up, show a target", "Pass across the body, follow through to the target", "Run straight"],
        ["Ball arrives at chest height, out in front", "Line stays flat and evenly spaced"]),
@@ -231,9 +226,11 @@ Ball carrier goes to ground and presents the ball. Support player arrives and cl
 ## Progressions
 - Add a second defender arriving late
 - Support starts further back
-- Scrum half picks up and passes to finish the rep
+- Scrum half picks up and passes to a second group doing the same exercise, then back to the first
 """,
-    ), ["Low body height on entry", "Drive beyond the ball, not into the pile", "Arrive quickly: the first two seconds win it"],
+    ), ["Shoulders above hips", "Arrive quickly", "Drive up", "Drive through",
+        "Ball carrier: ball in two hands into contact", "Ball carrier: land on your side, back to the opposition",
+        "Ball carrier: long place, back towards your team"],
        ["Ball available in under 3 seconds", "Cleaners stay on their feet"]),
 
     ("tackle", dict(
@@ -297,15 +294,16 @@ Walk-through of the calls first, then live throws to the front, middle and back.
     ("kicking", dict(
         name="Kicking skills", type="skill", default_duration_min=20,
         players="Backs, any number", coaches_needed=1, space="Half pitch",
-        summary="Backs practise box kicks, grubbers and kick chase.",
+        summary="Box kicks, grubbers and kick chase.",
         tags="kicking,backs",
         description="""## Set up
-Kickers in pairs facing each other 20–30m apart, plus chasers.
+Kickers in pairs facing each other 20–30m apart.
 
 ## How to run
-Rotate through kick types: punts for distance, box kicks off the base, grubbers through a gap. Chasers try to compete for every catch.
+Rotate through kick types: punts for distance, box kicks off the base, grubbers through a gap.
 
 ## Progressions
+- Add chasers who compete for every catch
 - Kick under pressure from a defender
 - Kick and chase as a group of three
 """,
@@ -330,25 +328,6 @@ Attack passes along the line on the coach's call; defence moves up together and 
     ), ["Up together, stay connected", "Talk: inside and outside calls", "Line speed, then control before contact"],
        ["No gaps or dog-legs in the line", "Attack is behind the gain line when touched"]),
 
-    ("presentation", dict(
-        name="Carry and present", type="skill", default_duration_min=10,
-        players="Pairs or threes", coaches_needed=1, space="10 × 10m",
-        summary="Ball carriers practise going into contact and presenting the ball for support.",
-        tags="breakdown,contact,carrying",
-        description="""## Set up
-Ball carrier and a shield holder; a third player as support.
-
-## How to run
-Carrier hits the shield, goes to ground and places the ball back at arm's length. Support player secures it.
-
-## Progressions
-- Shield holder tries to wrap up the ball
-- Carrier has to step before contact
-""",
-    ), ["Ball in two hands into contact", "Land on your side, back to the opposition", "Long place, back towards your team"],
-       ["Ball clearly presented for the scrum half", "Carrier lands safely every time"]),
-
-    # --- Game zones ----------------------------------------------------------------
     ("numbers-up", dict(
         name="Numbers-up attack game", type="game", default_duration_min=15,
         players="12–24", coaches_needed=1, space="30 × 22m",
@@ -363,45 +342,16 @@ Coach feeds the ball, attack plays until a try or turnover. Rotate defenders out
 ## Progressions
 - Defence gets an extra player after each try
 - Defence starts closer
+
+## Variations
+Different levels of contact:
+- Touch
+- Touch + rucks
+- Grab tackles
+- Full contact
 """,
     ), ["Fix defenders before passing", "Width first, then attack the space"],
        ["The extra player is used to score", "Attack scores in under four phases"]),
-
-    ("ruck-game", dict(
-        name="Touch-to-ruck game", type="game", default_duration_min=15,
-        players="12–30", coaches_needed=1, space="Half pitch",
-        summary="Game where a touch means the carrier goes to ground and support must clear the ruck.",
-        tags="breakdown,rucking,game",
-        description="""## Set up
-Two teams, shields for defenders if you want to limit contact.
-
-## How to run
-On a touch the ball carrier goes to ground and presents; the first two attackers clear one defender. Score if the ball comes out within three seconds.
-
-## Progressions
-- Two defenders can contest
-- Full contact at the ruck only
-""",
-    ), ["Support arrives in pairs", "Low body height on entry"],
-       ["Quick ball every ruck", "Defenders driven beyond the ball"]),
-
-    ("defence-game", dict(
-        name="Line speed defence game", type="game", default_duration_min=15,
-        players="12–24", coaches_needed=1, space="30 × 22m",
-        summary="Even-numbers game where the defence scores by stopping the attack behind the gain line.",
-        tags="defence,tackle,game",
-        description="""## Set up
-Even teams, gain line marked with cones.
-
-## How to run
-Normal game (touch or contact). Defence scores a point for every touch made behind the gain line.
-
-## Progressions
-- Attack gets an extra player
-- Full contact
-""",
-    ), ["Up together", "Talk every phase"],
-       ["Most tackles made behind the gain line", "No gaps in the line"]),
 
     ("kick-tennis", dict(
         name="Kick tennis", type="game", default_duration_min=15,
@@ -435,6 +385,13 @@ Call the lineout and move. Run it walk-through first, then at full speed with de
 ## Progressions
 - Opposition jumper contests
 - Defence goes from touch to full contact
+- Extend to 2 phases, then 3 phases
+
+## Variations
+Different parts of the pitch call for a different first-phase play:
+- Crash
+- Kick
+- Wide
 """,
     ), ["Calls are clear for forwards and backs", "Backs stay onside and run hard lines"],
        ["Clean lineout ball to the backs", "Move ends over the gain line"]),
@@ -446,8 +403,8 @@ RELATED = [
     ("lineout-in-front", "lineout"), ("lineout-in-front", "set-piece-phase"),  # "all other lineout and throwing" ones
     ("lineout-in-front", "lineout-mauls"), ("lineout", "lineout-mauls"),
     # Claude's starters (to review)
-    ("overlaps", "numbers-up"), ("ruck-clear", "ruck-game"), ("presentation", "ruck-game"),
-    ("tackle", "defence-game"), ("line-speed", "defence-game"), ("passing-move", "guards-bodyguards"),
+    ("overlaps", "numbers-up"), ("ruck-clear", "come-ruck-123"),
+    ("line-speed", "blitz-defence"), ("passing-move", "guards-bodyguards"),
     ("kicking", "kick-tennis"), ("lineout", "set-piece-phase"), ("contact-prep", "tackle"),
 ]
 
