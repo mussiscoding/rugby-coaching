@@ -17,6 +17,20 @@
         <textarea name="notes" rows="3">{{ values.notes }}</textarea>
       </label>
     {% endif %}
-    <div class="actions"><button class="primary">{{ "Save" if session else "Create session" }}</button></div>
+    <div class="actions"><button class="primary">{{ "Save" if session else "Create blank session" }}</button></div>
+
+    {% if not session and recent %}
+      <h2>Or duplicate a previous session</h2>
+      <p class="hint">Copies its blocks, groups, coaches, "why today" and starred points onto the date above. Leave the goal blank to keep its goal.</p>
+      <ul class="cards">
+        {% for s in recent %}
+          <li class="dup-row">
+            <span class="datetile"><span>{{ s.date|day_short }}</span><b>{{ s.date|day_num }}</b><span>{{ s.date|month_short }}</span></span>
+            <span class="dup-text"><span class="card-title">{{ s.goal or "No goal" }}</span><span class="card-summary">{{ s.block_count }} block{{ "s" if s.block_count != 1 }}</span></span>
+            <button name="from_session" value="{{ s.id }}">Duplicate</button>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
   </form>
 {% endblock %}

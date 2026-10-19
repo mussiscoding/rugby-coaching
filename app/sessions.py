@@ -250,10 +250,11 @@ def set_session_archived(conn, session_id: int, archived: bool, coach_id: int) -
             conn.execute("UPDATE sessions SET archived_at = NULL, archived_by = NULL WHERE id = ?", (session_id,))
 
 
-def copy_session(conn, source_id: int, new_date: str, coach_id: int) -> int:
-    """Copy a session's plan to a new date (D12).
+def copy_session(conn, source_id: int, new_date: str, coach_id: int,
+                 start_time: str | None = None, goal: str = "") -> int:
+    """Duplicate a session's plan onto a new date (D12).
 
-    Copied: goal, start time, blocks, groups, coaches, why today, starred points.
+    Copied: goal (unless a new one is given), blocks, groups, coaches, why today, starred points.
     Cleared: how it went, session notes, share-with-players.
     """
     source = get_session(conn, source_id)
@@ -262,7 +263,7 @@ def copy_session(conn, source_id: int, new_date: str, coach_id: int) -> int:
         new_id = conn.execute(
             """INSERT INTO sessions (date, start_time, goal, created_at, created_by, updated_at, updated_by)
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (new_date, source["start_time"], source["goal"], now, coach_id, now, coach_id),
+            (new_date, start_time or source["start_time"], goal or source["goal"], now, coach_id, now, coach_id),
         ).lastrowid
         blocks = conn.execute(
             "SELECT * FROM live_blocks WHERE session_id = ? ORDER BY position, id", (source_id,)).fetchall()

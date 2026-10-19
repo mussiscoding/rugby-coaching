@@ -87,16 +87,29 @@ def new_session(request: Request, coach: Coach = Depends(current_coach)):
     today = today_london()
     next_training = today + timedelta(days=(settings.training_weekday - today.weekday()) % 7)
     values = {"date": next_training.isoformat(), "start_time": settings.default_start_time, "goal": "", "notes": ""}
-    return render(request, "sessions/form.html", session=None, values=values, errors=[])
+    return _new_form(request, values, [])
+
+
+def _new_form(request: Request, values: dict, errors: list[str]):
+    with db() as conn:
+        recent = [s for s in conn.execute(
+            """SELECT s.*, (SELECT COUNT(*) FROM live_blocks b WHERE b.session_id = s.id) AS block_count
+               FROM sessions s WHERE s.archived_at IS NULL ORDER BY s.date DESC, s.id DESC LIMIT 8""")]
+    return render(request, "sessions/form.html", session=None, values=values, errors=errors, recent=recent)
 
 
 @coach.post("/sessions")
 def create_session(request: Request, form: FormData = Depends(form_data), coach: Coach = Depends(current_coach)):
     values, errors = _session_values(form)
     if errors:
-        return render(request, "sessions/form.html", session=None, values=values, errors=errors)
+        return _new_form(request, values, errors)
+    source = str(form.get("from_session") or "")
     with db() as conn:
-        session_id = ses.create_session(conn, values["date"], values["start_time"], values["goal"], coach.id)
+        if source.isdigit() and ses.get_session(conn, int(source)):
+            session_id = ses.copy_session(conn, int(source), values["date"], coach.id,
+                                          start_time=values["start_time"], goal=values["goal"])
+        else:
+            session_id = ses.create_session(conn, values["date"], values["start_time"], values["goal"], coach.id)
     return RedirectResponse(f"/sessions/{session_id}", status_code=303)
 
 
@@ -136,34 +149,6 @@ def save_session(request: Request, session_id: int, form: FormData = Depends(for
             return render(request, "sessions/form.html", session=session, values=values, errors=errors)
         ses.update_session(conn, session_id, values, coach.id)
     return RedirectResponse(f"/sessions/{session_id}", status_code=303)
-
-
-def next_same_weekday(source: str) -> str:
-    """Next occurrence of the source session's weekday, today or later (D12)."""
-    today = today_london()
-    ahead = (date.fromisoformat(source).weekday() - today.weekday()) % 7
-    return (today + timedelta(days=ahead)).isoformat()
-
-
-@coach.get("/sessions/{session_id}/copy")
-def copy_form(request: Request, session_id: int, coach: Coach = Depends(current_coach)):
-    with db() as conn:
-        session = _session_or_404(conn, session_id)
-    return render(request, "sessions/copy.html", session=session, new_date=next_same_weekday(session["date"]), errors=[])
-
-
-@coach.post("/sessions/{session_id}/copy")
-def copy_session(request: Request, session_id: int, form: FormData = Depends(form_data),
-                 coach: Coach = Depends(current_coach)):
-    new_date = str(form.get("date") or "")
-    with db() as conn:
-        session = _session_or_404(conn, session_id)
-        try:
-            date.fromisoformat(new_date)
-        except ValueError:
-            return render(request, "sessions/copy.html", session=session, new_date=new_date, errors=["Pick a date."])
-        new_id = ses.copy_session(conn, session_id, new_date, coach.id)
-    return RedirectResponse(f"/sessions/{new_id}", status_code=303)
 
 
 @coach.get("/deleted")

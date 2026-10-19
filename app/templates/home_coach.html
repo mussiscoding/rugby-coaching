@@ -21,18 +21,12 @@
   {% else %}
     <div class="empty">
       <p><strong>Nothing planned yet.</strong></p>
-      {% if past %}
-        <p class="muted">Start from last time and change what you need.</p>
-        <p><a class="button" href="/sessions/{{ past[0].id }}/copy">Copy last session ({{ past[0].date|day_short }} {{ past[0].date|day_num }} {{ past[0].date|month_short }})</a></p>
-      {% else %}
-        <p class="muted">Tap <strong>+ New</strong> to plan the first one.</p>
-      {% endif %}
+      <p class="muted">Tap <strong>+ New</strong> to plan one — from scratch or by duplicating a previous session.</p>
     </div>
   {% endif %}
 
   {% if past %}
     <h2>Past sessions</h2>
-    <p class="hint">Open one and use "Copy to a new date" to start this week's plan from it.</p>
     <ul class="cards">{% for s in past %}{{ session_row(s) }}{% endfor %}</ul>
   {% endif %}
   <p class="footnote"><a href="/deleted">Recently deleted</a></p>
