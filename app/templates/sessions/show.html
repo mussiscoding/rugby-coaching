@@ -29,7 +29,7 @@
       <form method="post" action="/sessions/{{ session.id }}/restore" class="inline"><button>Restore it</button></form></div>
   {% endif %}
   {% if undo %}
-    <div class="banner">{{ "Block" if undo[0] == "blocks" else "Group" }} removed.
+    <div class="toast" role="status">{{ "Block" if undo[0] == "blocks" else "Group" }} removed.
       <form method="post" action="/{{ 'blocks' if undo[0] == 'blocks' else 'groups' }}/{{ undo[1] }}/restore" class="inline"><button>Undo</button></form></div>
   {% endif %}
   {% if is_past and session.notes %}<p class="session-notes">Session notes: {{ session.notes }}</p>{% endif %}
