@@ -79,5 +79,6 @@ app.include_router(access.public)
 app.include_router(access.coach)
 app.include_router(home.viewer)
 app.include_router(activities.coach)
-app.include_router(sessions.viewer)
+# coach first: its GET /sessions/new must win over the viewer's /sessions/{session_id}
 app.include_router(sessions.coach)
+app.include_router(sessions.viewer)

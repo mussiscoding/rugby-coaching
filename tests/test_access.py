@@ -72,3 +72,7 @@ def test_safe_next():
     assert safe_next("/sessions/3") == "/sessions/3"
     for bad in ("//evil.com", "/\\evil.com", "https://evil.com", "", None):
         assert safe_next(bad) == "/"
+
+
+def test_coach_can_open_the_new_session_form(coach_client):
+    assert coach_client.get("/sessions/new").status_code == 200
